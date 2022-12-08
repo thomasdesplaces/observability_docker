@@ -1,0 +1,84 @@
+apiVersion: 1
+# Par YAML : 
+# - https://grafana.com/docs/grafana/latest/alerting/set-up/provision-alerting-resources/file-provisioning/
+# - https://github.com/grafana/grafana/blob/main/conf/provisioning/alerting/sample.yaml
+# Par API : 
+# - https://grafana.com/docs/grafana/latest/developers/http_api/alerting_provisioning/#validation-error
+groups:
+  - orgId: 1
+    name: Managed
+    folder: GET
+    interval: 60s
+    rules:
+    - uid: More_than_1_call_per_minute
+      title: More than 1 call per minute
+      condition: B
+      data:
+      - refId: A
+        datasourceUid: mimir
+        relativeTimeRange:
+          from: 60
+          to: 0
+        model:
+          expression: "rate(flask_http_request_total{method=\"GET\"}[1m]) > 0"
+          intervalMs: 1000
+          maxDataPoints: 43200
+          refId: A
+      - refId: B
+        datasourceUid: "-100"
+        relativeTimeRange:
+          from: 60
+          to: 0
+        model:
+          conditions:
+          - evaluator:
+              params:
+              - 0
+              - 0
+              type: gt
+            operator:
+              type: and
+            query:
+              params:
+              - A
+            reducer:
+              type: count
+            type: query
+          datasource:
+            type: __expr__
+            uid: __expr__
+          expression: A
+          intervalMs: 1000
+          maxDataPoints: 43200
+          refId: B
+          type: classic_conditions
+      noDataState: OK
+      executionErrorState: Error
+      for: 2m
+      annotations:
+        description: "Description Test"
+        summary: "Summary Test"
+        runbook_url: "https://google.fr"
+      labels:
+        Creator: TDE
+        severity: INFO
+
+contactPoints:
+  - orgId: 1
+    name: Slack2
+    receivers:
+    - uid: Slack2
+      type: slack
+      settings:
+        mentionChannel: here
+        mentionUsers: UUC1MDEE8
+        url: https://hooks.slack.com/services/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
+        username: Grafana Test Auto Alert
+
+policies:
+  - orgId: 1
+    receiver: Slack2
+    group_by: 
+    - grafana_folder
+    - alertname
+    routes:

@@ -1,0 +1,8 @@
+route:
+  receiver: 'slack'
+
+# TODO Configure a webhook to send alerts
+receivers:
+  - name: 'slack'
+    webhook_configs:
+      - url: https://ngrok.io

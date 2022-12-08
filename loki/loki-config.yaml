@@ -1,0 +1,47 @@
+server:
+  http_listen_port: 3100
+  grpc_listen_port: 9095
+
+memberlist:
+  abort_if_cluster_join_fails: false
+  bind_port: 7946
+  join_members:
+  - loki1:7946
+  - loki2:7946
+  - loki3:7946
+
+schema_config:
+  configs:
+    - from: 2021-08-01
+      store: boltdb-shipper
+      object_store: s3
+      schema: v11
+      index:
+        prefix: index_
+        period: 24h
+common:
+  path_prefix: /loki
+  replication_factor: 3
+  ring:
+    kvstore:
+      store: memberlist
+ruler:
+  storage:
+    type: s3
+    s3:
+      bucketnames: loki-ruler
+
+storage_config:
+  aws:
+    endpoint: minio:9000
+    insecure: true
+    bucketnames: loki-data
+    access_key_id: mimir
+    secret_access_key: supersecret
+    s3forcepathstyle: true
+  boltdb_shipper:
+    shared_store: s3
+    cache_ttl: 24h
+
+frontend_worker:
+  frontend_address: loki:9095

@@ -1,0 +1,302 @@
+version: "3.0"
+
+networks:
+  default:
+    name: observability-network
+    external: true
+
+volumes:
+  mimir1-data:
+  mimir2-data:
+  mimir3-data:
+  minio-data:
+
+services:
+  ######################################################################################
+  ######################################################################################
+  ################################# MINIO STORAGE ######################################
+  ######################################################################################
+  ######################################################################################
+  minio:
+    profiles:
+      - grafana
+    container_name: Minio
+    image: minio/minio
+    entrypoint: [""]
+    command: ["sh", "-c", "mkdir -p /data/mimir && mkdir -p /data/tempo && mkdir -p /data/loki-data && mkdir -p /data/loki-ruler && minio server --quiet /data"]
+    environment:
+      - MINIO_ROOT_USER=mimir
+      - MINIO_ROOT_PASSWORD=supersecret
+    volumes:
+      - minio-data:/data
+    labels:
+      namespace: monitoring
+
+  ######################################################################################
+  ######################################################################################
+  ################################## NGINX PROXY #######################################
+  ######################################################################################
+  ######################################################################################
+  nginx:
+    profiles:
+      - grafana
+    container_name: Nginx
+    image: nginx:latest
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - mimir1
+      - mimir2
+      - mimir3
+      - tempo1
+      - tempo2
+      - tempo3
+      - loki1
+      - loki2
+      - loki3
+    ports:
+      - 9009
+      - 3100
+    labels:
+      namespace: monitoring
+
+  ######################################################################################
+  ######################################################################################
+  ############################# GRAFANA VISUALIZATION ##################################
+  ######################################################################################
+  ######################################################################################
+  grafana:
+    profiles:
+        - grafana
+    container_name: Grafana
+    image: grafana/grafana:9.3.1
+    ports:
+      - "3000:3000"
+    volumes:
+      - "./grafana/datasource.yaml:/etc/grafana/provisioning/datasources/default.yaml"
+      - "./grafana/dashboard.yaml:/etc/grafana/provisioning/dashboards/default.yaml"
+      - "./grafana/catalogue.json:/var/lib/grafana/dashboards/catalogue.json"
+      - "./grafana/container_process.json:/var/lib/grafana/dashboards/container_process.json"
+    labels:
+      namespace: monitoring
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
+      GF_AUTH_DISABLE_LOGIN_FORM: "true"
+      GF_LOG_LEVEL: "debug"
+  
+  ######################################################################################
+  ######################################################################################
+  ############################### GRAFANA LOKI LOGS ####################################
+  ######################################################################################
+  ######################################################################################
+  loki1:
+    profiles:
+        - grafana
+    container_name: Loki-1
+    image: grafana/loki:2.7.0
+    command: "-config.file=/etc/loki/config.yaml -target=all"
+    ports:
+      - 3100
+    volumes:
+      - ./loki/loki-config.yaml:/etc/loki/config.yaml
+    depends_on:
+      - minio
+    networks:
+      default:
+        aliases:
+          - loki
+    labels:
+      namespace: monitoring
+
+  loki2:
+    profiles:
+        - grafana
+    container_name: Loki-2
+    image: grafana/loki:2.7.0
+    command: "-config.file=/etc/loki/config.yaml -target=all"
+    ports:
+      - 3100
+    volumes:
+      - ./loki/loki-config.yaml:/etc/loki/config.yaml
+    depends_on:
+      - minio
+    networks:
+      default:
+        aliases:
+          - loki
+    labels:
+      namespace: monitoring
+  
+  loki3:
+    profiles:
+        - grafana
+    container_name: Loki-3
+    image: grafana/loki:2.7.0
+    command: "-config.file=/etc/loki/config.yaml -target=all"
+    ports:
+      - 3100
+    volumes:
+      - ./loki/loki-config.yaml:/etc/loki/config.yaml
+    depends_on:
+      - minio
+    networks:
+      default:
+        aliases:
+          - loki
+    labels:
+      namespace: monitoring
+  
+  ######################################################################################
+  ######################################################################################
+  ############################# GRAFANA TEMPO TRACES ###################################
+  ######################################################################################
+  ######################################################################################
+  tempo1:
+    profiles:
+        - grafana
+    container_name: Tempo-1
+    image: grafana/tempo:1.5.0
+    command: "-target=scalable-single-binary -config.file=/etc/tempo.yaml"
+    volumes:
+      - ./tempo/tempo.yaml:/etc/tempo.yaml
+    restart: always
+    networks:
+      default:
+        aliases:
+          - tempo
+    depends_on:
+      - minio
+    ports:
+      - 3200
+      - 4317
+    labels:
+      namespace: monitoring
+  
+  tempo2:
+    profiles:
+        - grafana
+    container_name: Tempo-2
+    image: grafana/tempo:1.5.0
+    command: "-target=scalable-single-binary -config.file=/etc/tempo.yaml"
+    volumes:
+      - ./tempo/tempo.yaml:/etc/tempo.yaml
+    restart: always
+    depends_on:
+      - minio
+    networks:
+      default:
+        aliases:
+          - tempo
+    labels:
+      namespace: monitoring
+  
+  tempo3:
+    profiles:
+        - grafana
+    container_name: Tempo-3
+    image: grafana/tempo:1.5.0
+    command: "-target=scalable-single-binary -config.file=/etc/tempo.yaml"
+    volumes:
+      - ./tempo/tempo.yaml:/etc/tempo.yaml
+    restart: always
+    depends_on:
+      - minio
+    networks:
+      default:
+        aliases:
+          - tempo
+    labels:
+      namespace: monitoring
+
+  ######################################################################################
+  ######################################################################################
+  ############################### GRAFANA AGENT SCRAPE #################################
+  ######################################################################################
+  ######################################################################################
+  agent:
+    profiles:
+      - grafana
+    container_name: Agent
+    image: grafana/agent:0.29.0
+    volumes:
+      - ./agent/agent.yaml:/etc/agent.yaml
+    command: 
+      - --config.file=/etc/agent.yaml
+    ports:
+      - "12345:12345"
+      - "3500:3500"
+      - "4318:4318"
+    depends_on:
+      - tempo1
+      - tempo2
+      - tempo3
+      - mimir1
+      - mimir2
+      - mimir3
+      - loki1
+      - loki2
+      - loki3
+  
+  ######################################################################################
+  ######################################################################################
+  ############################## GRAFANA MIMIR METRICS #################################
+  ######################################################################################
+  ######################################################################################
+  mimir1:
+    profiles:
+      - grafana
+    container_name: Mimir-1
+    image: grafana/mimir:2.4.0
+    command: ["-config.file=/etc/mimir.yaml"]
+    hostname: mimir1
+    depends_on:
+      - minio
+    volumes:
+      - ./mimir/mimir.yaml:/etc/mimir.yaml
+      # TODO Configure alertes
+      - ./mimir/alertmanager-fallback-config.yaml:/etc/alertmanager-fallback-config.yaml
+      - mimir1-data:/data
+    labels:
+      namespace: monitoring
+
+  mimir2:
+    profiles:
+      - grafana
+    container_name: Mimir-2
+    image: grafana/mimir:2.4.0
+    command: ["-config.file=/etc/mimir.yaml"]
+    hostname: mimir2
+    depends_on:
+      - minio
+    volumes:
+      - ./mimir/mimir.yaml:/etc/mimir.yaml
+      # TODO Configure alertes
+      - ./mimir/alertmanager-fallback-config.yaml:/etc/alertmanager-fallback-config.yaml
+      - mimir2-data:/data
+    labels:
+      namespace: monitoring
+
+  mimir3:
+    profiles:
+      - grafana
+    container_name: Mimir-3
+    image: grafana/mimir:2.4.0
+    command: ["-config.file=/etc/mimir.yaml"]
+    hostname: mimir3
+    depends_on:
+      - minio
+    volumes:
+      - ./mimir/mimir.yaml:/etc/mimir.yaml
+      # TODO Configure alertes
+      - ./mimir/alertmanager-fallback-config.yaml:/etc/alertmanager-fallback-config.yaml
+      - mimir3-data:/data
+    labels:
+      namespace: monitoring
+
+  ######################################################################################
+  ######################################################################################
+  ############################# GRAFANA ALERT MANAGER ##################################
+  ######################################################################################
+  ######################################################################################
+  # TODO Add Alert Manager

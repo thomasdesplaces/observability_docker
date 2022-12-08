@@ -1,0 +1,57 @@
+server:
+  log_level: "debug"
+  log_format: "logfmt"
+
+metrics:
+  global:
+    scrape_interval: 5s
+    external_labels:
+      cluster: demo
+      namespace: demo
+    remote_write:
+      - url: http://nginx:9009/api/v1/push
+        send_exemplars: true
+        # Add X-Scope-OrgID header so that Mimir knows what tenant the remote write data should be stored in.
+        # In this case, our tenant is "myapp"
+        headers:
+          X-Scope-OrgID: myapp
+  wal_directory: "/tmp/agent/prom"
+  configs:
+    - name: "myapp-metrics"
+      scrape_configs:
+        - job_name: "agentprometheus"
+          static_configs:
+          - targets: ['api:8000']
+
+logs:
+  configs:
+    - name: "myapp-logs"
+      clients:
+        - url: http://nginx:3100/loki/api/v1/push
+      positions: 
+        filename: "/tmp/agent/loki.yaml"
+      scrape_configs:
+      # La valeur de job_name peut poser problème --> https://github.com/grafana/loki/issues/7275
+        - job_name: "agentloki"
+          loki_push_api:
+            server:
+              http_listen_port: 3500
+
+traces:
+  configs:
+  - name: "myapp-traces"
+    attributes:
+      actions:
+        - action: insert
+          key: loki.attribute.labels
+          value: "grafana_agent"
+    receivers:
+      otlp:
+        protocols:
+          http:
+    remote_write:
+      - endpoint: http://tempo:4317
+        insecure: true
+    automatic_logging:
+      backend: "stdout"
+      spans: true
