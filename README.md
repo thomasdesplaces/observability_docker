@@ -19,16 +19,16 @@ Mimir, Loki and Tempo are deploy in Monolithic mode with 3 instances of each.
 
 # Prerequisite
 
-1. Install [Docker](https://docs.docker.com/engine/install/) . 
+1. Install [Docker](https://docs.docker.com/engine/install/).  
 2. Create Docker network :  
 `docker network create observability-network`
 
 # How deploy it
 
 1. Clone this repository :  
-`git clone https://github.com/tonyglandyl28/observability_docker.git`
+`git clone https://github.com/tonyglandyl28/observability_docker.git`  
 2. Build & deploy :  
-`docker-compose --profile grafana up --build`
+`docker-compose --profile grafana up --build`  
 3. Access to Grafana for visualization :  
 *http://localhost:3000*
 
@@ -36,15 +36,15 @@ Mimir, Loki and Tempo are deploy in Monolithic mode with 3 instances of each.
 
 Deploy an application or database or other on the same docker network with these parameters :  
 1. Traces :  
-- Protocol : http
-- Host : agent
-- Port : 4318
-- Path : /v1/traces
+- Protocol : *http*
+- Host : *agent*
+- Port : *4318*
+- Path : */v1/traces*
 2. Logs :  
-- Protocol : http
-- Host : agent
-- Port : 3500
-- Path : /loki/api/v1/push
+- Protocol : *http*
+- Host : *agent*
+- Port : *3500*
+- Path : */loki/api/v1/push*
 3. Expose Metrics with Prometheus (or based on Prometheus) on port : `8000` and modify the **targets** value in [agent.yaml](./agent/agent.yaml) (line 24).
 
 # Sources
