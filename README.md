@@ -45,7 +45,8 @@ Deploy an application or database or other on the same docker network with these
 - Host : *agent*
 - Port : *3500*
 - Path : */loki/api/v1/push*
-3. Expose Metrics with Prometheus (or based on Prometheus) on port : `8000` and modify the **targets** value in [agent.yaml](./agent/agent.yaml) (line 24).
+3. Metrics :  
+- Expose with Prometheus (or based on Prometheus) on port : `8000` and modify the **targets** value in [agent.yaml](./agent/agent.yaml) (line 24).
 
 # Sources
 
