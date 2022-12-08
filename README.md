@@ -26,7 +26,7 @@ Mimir, Loki and Tempo are deploy in Monolithic mode with 3 instances of each.
 # How deploy it
 
 1. Clone this repository :  
-`git clone https://github.com`
+`git clone https://github.com/tonyglandyl28/observability_docker.git`
 2. Build & deploy :  
 `docker-compose --profile grafana up --build`
 3. Access to Grafana for visualization :  
