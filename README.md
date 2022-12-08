@@ -50,11 +50,11 @@ Deploy an application or database or other on the same docker network with these
 # Sources
 
 |            Logo              |           Version         |            Usage              |            Link              |
-|:------------------------:|--------------------------|--------------------------|--------------------------|
-| <img src="./assets/agent.png" alt="Grafana Agent" /> | v0.29.0 | Used to scrape data from applications (front, back, databases, ...) and send to each specific storage (like OpenTelemetry Collector). | https://github.com/grafana/agent/blob/main/example/docker-compose/docker-compose.yaml |
-| <img src="./assets/tempo.png" alt="Grafana Tempo" /> | v1.5.0 | Used to store Traces (like Jaeger or Zipkin). | https://github.com/grafana/tempo/tree/main/example/docker-compose/scalable-single-binary |
-| <img src="./assets/mimir.png" alt="Grafana Mimir" height="50"/> | v2.4.0 | Used to store Metrics (like Prometheus or Cortex). | https://github.com/grafana/mimir/blob/main/docs/sources/mimir/tutorials/play-with-grafana-mimir/docker-compose.yml |
-| <img src="./assets/loki.png" alt="Grafana Loki" height="50"/> | v2.7.0 | Used to store Logs (like Elasticsearch). | https://github.com/grafana/loki/tree/main/examples/getting-started |
-| <img src="./assets/grafana.png" alt="Grafana" height="40"/> | v9.3.1 | Used to visualize data (like Kibana). | https://github.com/grafana/grafana |
-| <img src="./assets/minio.png" alt="Minio" height="30"/> | Latest | Used to load balance traffic between each instance (on Cloud, use S3, Google Cloud Storage or similar). | https://github.com/minio/minio |
-| <img src="./assets/nginx.png" alt="NGinx" height="60"/> | Latest | Used to load balance traffic between each instance. | https://www.nginx.com/ |
+|:----------------------------:|---------------------------|-------------------------------|------------------------------|
+| [<img src="./assets/agent.png" alt="Grafana Agent" />](https://grafana.com/docs/agent/latest/) | v0.29.0 | Used to scrape data from applications (front, back, databases, ...) and send to each specific storage (like OpenTelemetry Collector). | https://github.com/grafana/agent/blob/main/example/docker-compose/docker-compose.yaml |
+| [<img src="./assets/tempo.png" alt="Grafana Tempo" />](https://grafana.com/docs/tempo/latest/) | v1.5.0 | Used to store Traces (like Jaeger or Zipkin). | https://github.com/grafana/tempo/tree/main/example/docker-compose/scalable-single-binary |
+| [<img src="./assets/mimir.png" alt="Grafana Mimir" height="50"/>](https://grafana.com/docs/mimir/latest/) | v2.4.0 | Used to store Metrics (like Prometheus or Cortex). | https://github.com/grafana/mimir/blob/main/docs/sources/mimir/tutorials/play-with-grafana-mimir/docker-compose.yml |
+| [<img src="./assets/loki.png" alt="Grafana Loki" height="50"/>](https://grafana.com/docs/loki/latest/) | v2.7.0 | Used to store Logs (like Elasticsearch). | https://github.com/grafana/loki/tree/main/examples/getting-started |
+| [<img src="./assets/grafana.png" alt="Grafana" height="40"/>](https://grafana.com/docs/grafana/latest/) | v9.3.1 | Used to visualize data (like Kibana). | https://github.com/grafana/grafana |
+| [<img src="./assets/minio.png" alt="Minio" height="30"/>](https://min.io) | Latest | Used to load balance traffic between each instance (on Cloud, use S3, Google Cloud Storage or similar). | https://github.com/minio/minio |
+| [<img src="./assets/nginx.png" alt="NGinx" height="60"/>](https://www.nginx.com/) | Latest | Used to load balance traffic between each instance. | https://github.com/nginx/nginx |
