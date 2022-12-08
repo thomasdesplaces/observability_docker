@@ -49,8 +49,8 @@ Deploy an application or database or other on the same docker network with these
 
 # Sources
 
-|            Logo/Link              |      Version    |            Usage              |            Link              |
-|:---------------------------------:|-----------------|-------------------------------|------------------------------|
+|                   Logo/Link                   |      Version    |               Usage                 |            Link            |
+|:---------------------------------------------:|-----------------|-------------------------------------|----------------------------|
 | [<img src="./assets/agent.png" alt="Grafana Agent" width="200"/>](https://grafana.com/docs/agent/latest/) | v0.29.0 | Used to scrape data from applications (front, back, databases, ...) and send to each specific storage (like OpenTelemetry Collector). | https://github.com/grafana/agent/blob/main/example/docker-compose/docker-compose.yaml |
 | [<img src="./assets/tempo.png" alt="Grafana Tempo" width="200"/>](https://grafana.com/docs/tempo/latest/) | v1.5.0 | Used to store Traces (like Jaeger or Zipkin). | https://github.com/grafana/tempo/tree/main/example/docker-compose/scalable-single-binary |
 | [<img src="./assets/mimir.png" alt="Grafana Mimir" width="200"/>](https://grafana.com/docs/mimir/latest/) | v2.4.0 | Used to store Metrics (like Prometheus or Cortex). | https://github.com/grafana/mimir/blob/main/docs/sources/mimir/tutorials/play-with-grafana-mimir/docker-compose.yml |
