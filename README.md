@@ -30,7 +30,7 @@ Mimir, Loki and Tempo are deploy in Monolithic mode with 3 instances of each.
 2. Build & deploy :  
 `docker-compose --profile grafana up --build`
 3. Access to Grafana for visualization :  
-*https://localhost:3000*
+*http://localhost:3000*
 
 # How to send logs/metrics/traces
 
