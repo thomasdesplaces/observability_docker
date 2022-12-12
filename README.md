@@ -70,6 +70,14 @@ Grafana --> Nginx : 4602 --> Tempo : 4603
 6. Consult Metrics on Grafana :
 Grafana --> Nginx : 4702 --> Mimir : 3703
 
+# TODO
+
+- Tests Prometheus Exemplars.
+- Add comments in YAML & Docker files.
+- Add Alert Manager.
+- Add a data generator (logs, metrics, traces) - a React frontend with FastApi & PostgreSQL backend.
+- Create dashboards for these application stack.
+- Configure all components for distributed installation.
 
 # Sources
 

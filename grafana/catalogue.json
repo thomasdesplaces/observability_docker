@@ -572,7 +572,7 @@
               "type": "prometheus",
               "uid": "mimir"
             },
-            "expr": "process_resident_memory_bytes{job=\"myapp\"}",
+            "expr": "process_resident_memory_bytes{agent_from=\"grafana_agent\"}",
             "format": "time_series",
             "intervalFactor": 1,
             "legendFormat": "mem",
@@ -853,7 +853,7 @@
               "type": "prometheus",
               "uid": "mimir"
             },
-            "expr": "rate(process_cpu_seconds_total{job=\"myapp\"}[30s])",
+            "expr": "rate(process_cpu_seconds_total{agent_from=\"grafana_agent\"}[30s])",
             "format": "time_series",
             "intervalFactor": 1,
             "legendFormat": "cpu",
@@ -950,7 +950,7 @@
             },
             "queryType": "nativeSearch",
             "refId": "A",
-            "serviceName": "myapp"
+            "tags": "tempo.attribute.labels=\"grafana_agent\""
           }
         ],
         "title": "Traces",
@@ -1013,7 +1013,7 @@
               "uid": "loki"
             },
             "editorMode": "builder",
-            "expr": "{job=\"myapp\"} |= ``",
+            "expr": "{agent_from=\"grafana_agent\"} |= ``",
             "queryType": "range",
             "refId": "A"
           }
