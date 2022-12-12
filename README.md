@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="./assets/observability.png" alt="Observability" width="700"/>
+    <img src="./assets/observability.png" alt="Observability" width="500"/>
 </p>
 
 ![alt production](https://img.shields.io/badge/Production--Ready-No-green)
