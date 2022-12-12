@@ -1,11 +1,13 @@
-![alt Grafana_Labs](./assets/grafana_logo-web.svg)
+<p align="center">
+    <img src="./assets/observability.png" alt="Observability" width="700"/>
+</p>
 
 ![alt production](https://img.shields.io/badge/Production--Ready-No-green)
 ![alt docker](https://img.shields.io/badge/Deployment_tool-Docker--Compose-orange)
 
 # Why
 
-This repository contain an observability stack using Grafana Labs tools.  
+This repository contain an observability stack using [<img src="./assets/grafana_logo-web.svg" alt="Observability" width="200"/>](https://grafana.com/oss/) tools.   
 These one is deploying with Docker Compose to test all the stack's tools.  
 
 It is only a testing stack with no security, no production-ready configuration, ...  
