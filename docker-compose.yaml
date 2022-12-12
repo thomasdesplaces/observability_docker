@@ -54,9 +54,6 @@ services:
       - loki1
       - loki2
       - loki3
-    ports:
-      - 9009
-      - 3100
     labels:
       namespace: monitoring
 
@@ -71,7 +68,7 @@ services:
     container_name: Grafana
     image: grafana/grafana:9.3.1
     ports:
-      - "3000:3000"
+      - 3000:3000
     volumes:
       - "./grafana/datasource.yaml:/etc/grafana/provisioning/datasources/default.yaml"
       - "./grafana/dashboard.yaml:/etc/grafana/provisioning/dashboards/default.yaml"
@@ -96,8 +93,6 @@ services:
     container_name: Loki-1
     image: grafana/loki:2.7.0
     command: "-config.file=/etc/loki/config.yaml -target=all"
-    ports:
-      - 3100
     volumes:
       - ./loki/loki-config.yaml:/etc/loki/config.yaml
     depends_on:
@@ -115,8 +110,6 @@ services:
     container_name: Loki-2
     image: grafana/loki:2.7.0
     command: "-config.file=/etc/loki/config.yaml -target=all"
-    ports:
-      - 3100
     volumes:
       - ./loki/loki-config.yaml:/etc/loki/config.yaml
     depends_on:
@@ -134,8 +127,6 @@ services:
     container_name: Loki-3
     image: grafana/loki:2.7.0
     command: "-config.file=/etc/loki/config.yaml -target=all"
-    ports:
-      - 3100
     volumes:
       - ./loki/loki-config.yaml:/etc/loki/config.yaml
     depends_on:
@@ -167,9 +158,6 @@ services:
           - tempo
     depends_on:
       - minio
-    ports:
-      - 3200
-      - 4317
     labels:
       namespace: monitoring
   
@@ -218,15 +206,11 @@ services:
     profiles:
       - grafana
     container_name: Agent
-    image: grafana/agent:0.29.0
+    image: grafana/agent:main-6f9d397
     volumes:
       - ./agent/agent.yaml:/etc/agent.yaml
     command: 
       - --config.file=/etc/agent.yaml
-    ports:
-      - "12345:12345"
-      - "3500:3500"
-      - "4318:4318"
     depends_on:
       - tempo1
       - tempo2

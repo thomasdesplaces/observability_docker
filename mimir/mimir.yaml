@@ -3,7 +3,7 @@ target: all
 server:
   log_level: info
   grpc_listen_port: 9095
-  http_listen_port: 8080
+  http_listen_port: 3703
 
 # Configure Mimir to use Minio as object storage backend.
 common:

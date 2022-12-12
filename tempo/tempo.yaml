@@ -2,14 +2,15 @@ search_enabled: true
 auth_enabled: false
 
 server:
-  http_listen_port: 3200
+  http_listen_port: 4603
   grpc_listen_port: 9095
 
 distributor:
   receivers:                           
     otlp:
       protocols:
-        grpc:
+        http:
+          endpoint: 0.0.0.0:3603
   log_received_spans:
     enabled: true
     include_all_attributes: true

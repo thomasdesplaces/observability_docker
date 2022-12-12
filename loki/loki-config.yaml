@@ -1,5 +1,5 @@
 server:
-  http_listen_port: 3100
+  http_listen_port: 3503
   grpc_listen_port: 9095
 
 memberlist:

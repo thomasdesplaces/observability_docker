@@ -7,7 +7,7 @@ datasources:
     editable: true
     is_default: true
     access: proxy
-    url: http://nginx:9009/prometheus
+    url: http://nginx:4702/prometheus
     jsonData:
       httpMethod: POST
       httpHeaderName1: 'X-Scope-OrgID'
@@ -15,19 +15,19 @@ datasources:
     secureJsonData:
       httpHeaderValue1: 'myapp'
   
-  - name: Mimir Alertmanager
-    uid: alertmanager
-    type: alertmanager
-    access: proxy
-    orgId: 1
-    url: http://nginx:9009/
-    version: 1
-    editable: true
-    jsonData:
-      httpHeaderName1: 'X-Scope-OrgID'
-      implementation: 'cortex'
-    secureJsonData:
-      httpHeaderValue1: 'demo'
+  # - name: Mimir Alertmanager
+  #   uid: alertmanager
+  #   type: alertmanager
+  #   access: proxy
+  #   orgId: 1
+  #   url: http://nginx:9009/
+  #   version: 1
+  #   editable: true
+  #   jsonData:
+  #     httpHeaderName1: 'X-Scope-OrgID'
+  #     implementation: 'cortex'
+  #   secureJsonData:
+  #     httpHeaderValue1: 'demo'
   
   - uid: loki
     name: Loki
@@ -35,7 +35,7 @@ datasources:
     editable: true
     is_default: true
     access: proxy
-    url: http://nginx:3100
+    url: http://nginx:4502
     jsonData:
       derivedFields:
         - datasourceUid: tempo
@@ -49,7 +49,7 @@ datasources:
     editable: true
     is_default: true
     access: proxy
-    url: http://tempo:3200
+    url: http://nginx:4602
     jsonData:
       nodeGraph:
         enabled: true
