@@ -26,6 +26,9 @@ blocks_storage:
 memberlist:
   join_members: [ mimir1, mimir2, mimir3 ]
 
+limits:
+  max_global_exemplars_per_user: 100000
+
 ruler:
   rule_path: /data/ruler
   alertmanager_url: http://127.0.0.1:8080/alertmanager
