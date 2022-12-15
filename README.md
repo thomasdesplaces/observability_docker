@@ -82,16 +82,9 @@ Grafana --> Nginx : 4602 --> Tempo : 4603
 6. Consult Metrics on Grafana :
 Grafana --> Nginx : 4702 --> Mimir : 3703
 
-# TODO
-
-- Tests Prometheus Exemplars.
-- ~~Add comments in YAML & Docker files.~~ (v0.0.2)
-- Add Alert Manager.
-- Add a data generator (logs, metrics, traces) - a React frontend ~~with FastApi & PostgreSQL backend~~. v(0.0.2)
-- Create dashboards for these application stack.
-- Configure all components for distributed installation.
-
 # Sources
+
+## Observability stack
 
 |                   Logo/Link                   |      Version    |               Usage                 |
 |:---------------------------------------------:|-----------------|-------------------------------------|
@@ -102,4 +95,14 @@ Grafana --> Nginx : 4702 --> Mimir : 3703
 | [<img src="./assets/grafana.png" alt="Grafana" width="200"/>](https://grafana.com/docs/grafana/latest/) | v9.3.1 | Used to visualize data (like Kibana). Based on https://github.com/grafana/grafana |
 | [<img src="./assets/minio.png" alt="Minio" width="200"/>](https://min.io) | Latest | Used to load balance traffic between each instance (on Cloud, use S3, Google Cloud Storage or similar). Based on https://github.com/minio/minio |
 | [<img src="./assets/nginx.png" alt="NGinx" width="200"/>](https://www.nginx.com/) | Latest | Used to load balance traffic between each instance. Based on https://github.com/nginx/nginx |
-| [<img src="./assets/blueswen.png" alt="Blueswen" width="200"/>](https://github.com/Blueswen/fastapi-observability) | Latest | Used to configure FastAPI application. Thanks to [@Blueswen](https://github.com/blueswen) |
+
+## Application stack
+Thanks to [@Blueswen](https://github.com/blueswen) for the FastAPI observabnility configuration.
+
+|                   Logo/Link                   |      Version    |               Usage                 |
+|:---------------------------------------------:|-----------------|-------------------------------------|
+| [<img src="./assets/promtail.png" alt="Promtail" width="200">](https://grafana.com/docs/loki/latest/clients/promtail/) | Latest | Used to scrape application logs from file. |
+| [<img src="./assets/fastapi.png" alt="FastAPI" width="200">](https://fastapi.tiangolo.com) | 0.88.0 | Used to expose API. Based on  https://github.com/Blueswen/fastapi-observability |
+| [<img src="./assets/postgresql.png" alt="PostgreSQL" width="200">](https://www.postgresql.org) | 15-Bullseye | Used to store application data. |
+| [<img src="./assets/k6.png" alt="k6.io" width="200">](https://www.k6.io) | Latest | Used to performed unit tests. |
+| [<img src="./assets/otel.png" alt="OpenTelemetry" width="200">](https://github.com/open-telemetry/opentelemetry-python) | 1.15.0 | Used to generate traces. |
