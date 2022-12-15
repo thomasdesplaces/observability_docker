@@ -1,6 +1,8 @@
+# Define datasource
 apiVersion: 1
 
 datasources:
+  # Mimir datasource to get metrics
   - uid: mimir
     name: mimir
     type: prometheus
@@ -13,7 +15,7 @@ datasources:
       httpHeaderName1: 'X-Scope-OrgID'
       alertmanagerUid: 'alertmanager'
     secureJsonData:
-      httpHeaderValue1: 'myapp'
+      httpHeaderValue1: 'backend'
   
   # - name: Mimir Alertmanager
   #   uid: alertmanager
@@ -29,6 +31,7 @@ datasources:
   #   secureJsonData:
   #     httpHeaderValue1: 'demo'
   
+  # Loki datasource to get logs
   - uid: loki
     name: Loki
     type: loki
@@ -43,6 +46,7 @@ datasources:
           name: TraceID
           url: $${__value.raw}
   
+  # Tempo datasource to get traces
   - uid: tempo
     name: Tempo
     type: tempo

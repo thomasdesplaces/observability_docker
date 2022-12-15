@@ -2,8 +2,10 @@
     <img src="./assets/observability.png" alt="Observability" width="500"/>
 </p>
 
+![alt version](https://img.shields.io/badge/Version-0.0.2-violet)
 ![alt production](https://img.shields.io/badge/Production--Ready-No-green)
 ![alt docker](https://img.shields.io/badge/Deployment_tool-Docker--Compose-orange)
+![alt ARM](https://img.shields.io/badge/Platform-ARM--M1-red)
 
 # Why
 
@@ -15,11 +17,19 @@ This for testing purpose.
 
 # Architecture
 
-Mimir, Loki and Tempo are deploy in Monolithic mode with 3 instances of each.  
+The observability stack is composed by Mimir, Loki and Tempo which are deployed in Monolithic mode with 3 instances of each.  
+The application stack is composed by a FastAPI application with some routes and PostgreSQL database with 1 table.  
+Logs are written in a log file, scrape by [Grafana Promtail](https://grafana.com/docs/loki/latest/clients/promtail/) and send to Grafana Agent.  
+Metrics are exposed via [Prometheus Client](https://github.com/prometheus/client_python) and scraped by Grafana Agent.  
+Traces are sent via [Opentelemetry SDK](https://github.com/open-telemetry/opentelemetry-python) to Grafana Agent.  
+Unit tests are performed by [k6.io](https://k6.io).
 
 ![alt schema](./assets/Observability-Grafana_Stack.png)
 
 # Prerequisite
+
+This repository is run on Mac M1 (ARM architecture).  
+If you want to use another architecture, be sure to modify the Dockerfiles which import arm binary (ex. promtail on the app Dockerfile).  
 
 1. Install [Docker](https://docs.docker.com/engine/install/).  
 2. Create Docker network :  
@@ -29,10 +39,12 @@ Mimir, Loki and Tempo are deploy in Monolithic mode with 3 instances of each.
 
 1. Clone this repository :  
 `git clone https://github.com/tonyglandyl28/observability_docker.git`  
-2. Build & deploy :  
+2. Build & deploy observability stack :  
 `docker-compose --profile grafana up --build`  
 3. Access to Grafana for visualization :  
 *http://localhost:3000*
+4. Build & deploy application stack :  
+`docker-compose --profile application up --build`  
 
 # How to send logs/metrics/traces
 
@@ -73,9 +85,9 @@ Grafana --> Nginx : 4702 --> Mimir : 3703
 # TODO
 
 - Tests Prometheus Exemplars.
-- Add comments in YAML & Docker files.
+- ~~Add comments in YAML & Docker files.~~ (v0.0.2)
 - Add Alert Manager.
-- Add a data generator (logs, metrics, traces) - a React frontend with FastApi & PostgreSQL backend.
+- Add a data generator (logs, metrics, traces) - a React frontend ~~with FastApi & PostgreSQL backend~~. v(0.0.2)
 - Create dashboards for these application stack.
 - Configure all components for distributed installation.
 
@@ -90,3 +102,4 @@ Grafana --> Nginx : 4702 --> Mimir : 3703
 | [<img src="./assets/grafana.png" alt="Grafana" width="200"/>](https://grafana.com/docs/grafana/latest/) | v9.3.1 | Used to visualize data (like Kibana). Based on https://github.com/grafana/grafana |
 | [<img src="./assets/minio.png" alt="Minio" width="200"/>](https://min.io) | Latest | Used to load balance traffic between each instance (on Cloud, use S3, Google Cloud Storage or similar). Based on https://github.com/minio/minio |
 | [<img src="./assets/nginx.png" alt="NGinx" width="200"/>](https://www.nginx.com/) | Latest | Used to load balance traffic between each instance. Based on https://github.com/nginx/nginx |
+| [<img src="./assets/blueswen.png" alt="Blueswen" width="200"/>](https://github.com/Blueswen/fastapi-observability) | Latest | Used to configure FastAPI application. Thanks to [@Blueswen](https://github.com/blueswen) |

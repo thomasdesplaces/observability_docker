@@ -2,8 +2,8 @@ search_enabled: true
 auth_enabled: false
 
 server:
+  log_level: error
   http_listen_port: 4603
-  grpc_listen_port: 9095
 
 distributor:
   receivers:                           
@@ -12,8 +12,9 @@ distributor:
         http:
           endpoint: 0.0.0.0:3603
   log_received_spans:
-    enabled: true
-    include_all_attributes: true
+    # For debug, set true
+    enabled: false
+    include_all_attributes: false
 
 ingester:
   trace_idle_period: 10s
@@ -55,6 +56,7 @@ storage:
       path: /tmp/tempo/wal
       encoding: snappy
     s3:
+      # Use Minio to store traces
       bucket: tempo
       endpoint: minio:9000
       access_key: mimir

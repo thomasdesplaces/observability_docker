@@ -1,38 +1,43 @@
 server:
-  log_level: "debug"
-  log_format: "logfmt"
+  log_level: debug
+  log_format: logfmt
 
 metrics:
   global:
     scrape_interval: 5s
     external_labels:
-      cluster: demo
-      namespace: demo
+      cluster: test
+      namespace: monitoring
     remote_write:
       - url: http://nginx:3702/api/v1/push
         send_exemplars: true
         # Add X-Scope-OrgID header so that Mimir knows what tenant the remote write data should be stored in.
-        # In this case, our tenant is "myapp"
+        # In this case, our tenant is "backend"
         headers:
-          X-Scope-OrgID: myapp
+          X-Scope-OrgID: backend
   wal_directory: "/tmp/agent/prom"
   configs:
-    - name: "myapp-metrics"
+    - name: "backend-metrics"
       scrape_configs:
-        - job_name: "agentprometheus"
+        - job_name: "backend_fastapi"
           static_configs:
-          - targets: ['api:8000']
+          - targets: ['backend:5050']
+    # - name: "myapp-metrics"
+    #   scrape_configs:
+    #     - job_name: "backend_flask"
+    #       static_configs:
+    #       - targets: ['api:8000']
 
 logs:
   configs:
-    - name: "myapp-logs"
+    - name: "backend-logs"
       clients:
         - url: http://nginx:3502/loki/api/v1/push
       positions: 
         filename: "/tmp/agent/loki.yaml"
       scrape_configs:
       # This value should be a problem --> https://github.com/grafana/loki/issues/7275
-        - job_name: "agentloki"
+        - job_name: "backend_fastapi"
           loki_push_api:
             server:
               http_listen_port: 3501
@@ -41,12 +46,12 @@ logs:
 
 traces:
   configs:
-  - name: "myapp-traces"
+  - name: "backend-traces"
     attributes:
       actions:
         - action: insert
           key: tempo.attribute.labels
-          value: "grafana_agent"
+          value: "backend_fastapi"
     receivers:
       otlp:
         protocols:

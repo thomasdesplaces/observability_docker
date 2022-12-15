@@ -1,0 +1,26 @@
+server:
+    disable: true
+
+positions:
+  filename: /usr/src/app/positions.yaml
+
+clients:
+  - url: http://nginx:3500/loki/api/v1/push
+
+scrape_configs:
+- job_name: Backend
+  pipeline_stages:
+   # Drop line where trace_id=0
+   - drop:
+        expression: ".*trace_id=0.*"
+   # Drop line when Grafana Agents scrape metrics
+   - drop:
+        expression: "GET /metrics"
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: Backend
+      host: FastAPI
+      agent: Promtail
+      __path__: /usr/src/app/*log

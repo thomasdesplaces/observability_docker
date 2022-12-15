@@ -1,7 +1,7 @@
 target: all
 
 server:
-  log_level: info
+  log_level: error
   grpc_listen_port: 9095
   http_listen_port: 3703
 

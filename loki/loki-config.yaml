@@ -1,6 +1,6 @@
 server:
+  log_level: error
   http_listen_port: 3503
-  grpc_listen_port: 9095
 
 memberlist:
   abort_if_cluster_join_fails: false
@@ -25,23 +25,18 @@ common:
   ring:
     kvstore:
       store: memberlist
-ruler:
-  storage:
-    type: s3
-    s3:
-      bucketnames: loki-ruler
 
 storage_config:
   aws:
+    # Use Minio to store logs
     endpoint: minio:9000
     insecure: true
     bucketnames: loki-data
     access_key_id: mimir
     secret_access_key: supersecret
     s3forcepathstyle: true
+    http_config:
+      response_header_timeout: 5s
   boltdb_shipper:
     shared_store: s3
     cache_ttl: 24h
-
-frontend_worker:
-  frontend_address: loki:9095
