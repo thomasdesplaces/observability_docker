@@ -14,6 +14,9 @@ datasources:
       httpMethod: POST
       httpHeaderName1: 'X-Scope-OrgID'
       alertmanagerUid: 'alertmanager'
+      exemplarTraceIdDestinations:
+        - datasourceUid: tempo
+          name: TraceID
     secureJsonData:
       httpHeaderValue1: 'backend'
   
