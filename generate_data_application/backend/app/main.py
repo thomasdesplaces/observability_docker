@@ -8,13 +8,18 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.exceptions import HTTPException as StarletteHTTPException
 import openapi_description
 import uvicorn
-import logging
-from observability import LOGGER, setting_otlp, PrometheusMiddleware, metrics, EndpointFilter
+from observability import (
+    LOGGER,
+    setting_otlp,
+    PrometheusMiddleware,
+    metrics
+)
 import settings
+import clients
 
 app = FastAPI(
-    docs_url="/api", 
-    redoc_url=None, 
+    docs_url="/api",
+    redoc_url=None,
     openapi_url="/api/openapi.json",
     openapi_tags=openapi_description.TAGS,
     title=openapi_description.API_DESCRIPTION["title"],
@@ -36,18 +41,16 @@ tracer = setting_otlp(app)
 traces = tracer.get_tracer(__name__)
 
 LOGGER = LOGGER.getChild(__name__)
-LOGGER.addFilter(EndpointFilter())
-logging.getLogger("uvicorn.access").addFilter(EndpointFilter())
-# LOGGER = logging.getLogger(settings.APP_NAME)
 
-import clients
+#import clients
 
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):
+    """Start middleware and return 422 error"""
     LOGGER.debug("Start Middleware")
     response = await call_next(request)
     if response.status_code == 422:
-        LOGGER.warn("Status Code %s on path %s" % (response.status_code, request.path))
+        LOGGER.warning(f"Status Code {request.status_code} on path {request}")
         response = JSONResponse(status_code=response.status_code, content={
             "code":"422.01",
             "message": "Error in the attributs"
@@ -57,30 +60,31 @@ async def add_process_time_header(request: Request, call_next):
 
 @app.exception_handler(StarletteHTTPException)
 async def raise_exception(request: Request, exc: StarletteHTTPException):
+    """Function to raise exception and adapt error message"""
     if exc.status_code == 404:
-        LOGGER.warn("Status Code %s on path %s" % (exc.status_code, request.path))
+        LOGGER.warning(f"Status Code {exc.status_code} on path {request}")
         return JSONResponse(status_code=exc.status_code, content={
             "code":"404.01",
             "message": "Resource not found"
         })
-    elif exc.status_code == 500:
-        LOGGER.warn("Status Code %s on path %s" % (exc.status_code, request.path))
+    if exc.status_code == 500:
+        LOGGER.warning(f"Status Code {exc.status_code} on path {request}")
         return JSONResponse(status_code=exc.status_code, content={
             "code":"500.01",
             "message":"Internal error"
         })
-    elif exc.status_code == 405:
-        LOGGER.warn("Status Code %s on path %s" % (exc.status_code, request.path))
+    if exc.status_code == 405:
+        LOGGER.warning(f"Status Code {exc.status_code} on path {request}")
         return JSONResponse(status_code=exc.status_code, content={
             "code":"405.01",
             "message": "Method not allowed"
         })
-    else:
-        LOGGER.warn("Status Code %s on path %s" % (exc.status_code, request.path))
-        return JSONResponse(status_code=exc.status_code, content=exc.detail)
+    LOGGER.warning(f"Status Code {exc.status_code} on path {request}")
+    return JSONResponse(status_code=exc.status_code, content=exc.detail)
 
 @app.get("/")
 async def root():
+    """Route test"""
     return {"Hello":"World"}
 
 app.include_router(clients.router)

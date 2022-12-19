@@ -6,4 +6,5 @@ RUN apt-get update && apt-get -y install --no-install-recommends libpq-dev \
 ENV POSTGRES_PASSWORD docker
 ENV POSTGRES_DB clients
 COPY clients.sql /docker-entrypoint-initdb.d/
+COPY postgresql.conf /etc/postgresql/
 EXPOSE 5432

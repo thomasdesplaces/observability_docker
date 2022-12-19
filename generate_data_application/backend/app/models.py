@@ -2,7 +2,10 @@
 Models definition
 """
 
-from sqlalchemy import Column, String
+from sqlalchemy import (
+    Column,
+    String
+)
 from connection import Base
 from observability import LOGGER
 

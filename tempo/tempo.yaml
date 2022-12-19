@@ -6,7 +6,7 @@ server:
   http_listen_port: 4603
 
 distributor:
-  receivers:                           
+  receivers:
     otlp:
       protocols:
         http:
@@ -25,7 +25,7 @@ ingester:
       kvstore:
         store: memberlist
       replication_factor: 1
-    heartbeat_period: 100ms            
+    heartbeat_period: 100ms
 
 compactor:
   ring:

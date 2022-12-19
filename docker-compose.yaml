@@ -82,7 +82,7 @@ services:
       GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
       GF_AUTH_DISABLE_LOGIN_FORM: "true"
       GF_LOG_LEVEL: "debug"
-  
+
   ######################################################################################
   ######################################################################################
   ############################### GRAFANA LOKI LOGS ####################################
@@ -121,7 +121,7 @@ services:
           - loki
     labels:
       namespace: monitoring
-  
+
   loki3:
     profiles:
         - grafana
@@ -138,7 +138,7 @@ services:
           - loki
     labels:
       namespace: monitoring
-  
+
   ######################################################################################
   ######################################################################################
   ############################# GRAFANA TEMPO TRACES ###################################
@@ -161,7 +161,7 @@ services:
       - minio
     labels:
       namespace: monitoring
-  
+
   tempo2:
     profiles:
         - grafana
@@ -179,7 +179,7 @@ services:
           - tempo
     labels:
       namespace: monitoring
-  
+
   tempo3:
     profiles:
         - grafana
@@ -210,7 +210,7 @@ services:
     image: grafana/agent:main-6f9d397
     volumes:
       - ./agent/agent.yaml:/etc/agent.yaml
-    command: 
+    command:
       - --config.file=/etc/agent.yaml
     depends_on:
       - tempo1
@@ -222,7 +222,7 @@ services:
       - loki1
       - loki2
       - loki3
-  
+
   ######################################################################################
   ######################################################################################
   ############################## GRAFANA MIMIR METRICS #################################
@@ -306,7 +306,7 @@ services:
       - db
     labels:
       namespace: monitoring
-  
+
   ######################################################################################
   ######################################################################################
   ############################## DATABASE APPLICATION ##################################
@@ -320,14 +320,12 @@ services:
     build:
       context: generate_data_application/db
       dockerfile: Dockerfile
-    volumes:
-      - ./generate_data_application/db/postgres.conf:/etc/postgresql/postgresql.conf
     command: postgres -c config_file=/etc/postgresql/postgresql.conf
     ports:
       - 5432:5432
     labels:
       namespace: monitoring
-  
+
   ######################################################################################
   ######################################################################################
   ################################### Unit tests #######################################

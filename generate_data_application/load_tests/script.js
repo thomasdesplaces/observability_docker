@@ -37,15 +37,15 @@ export default function () {
             'is status 201': (r) => r.status === 201,
             'is ID present': (r) => r.json().hasOwnProperty('id')
         });
-        
+
         // Get clients list
         const listClients = http.get(url).json();
         check(listClients, { 'retrieved clients': (clients) => clients.length > 0});
-        
+
         // Get client details
         const getClient = http.get(url+"/"+listClients[0].id);
-        check (getClient, { 
-            'is status 200': (r) => r.status === 200 
+        check (getClient, {
+            'is status 200': (r) => r.status === 200
         });
 
         // Put client details
@@ -53,13 +53,13 @@ export default function () {
             lastname: "Dupond__" + __ITER
         })
         const putClient = http.get(url+"/"+listClients[0].id, newLastname);
-        check (putClient, { 
-            'is status 200': (r) => r.status === 200 
+        check (putClient, {
+            'is status 200': (r) => r.status === 200
         });
 
         // Delete client
         const deleteClient = http.del(url+"/"+listClients[0].id);
-        check (deleteClient, { 
+        check (deleteClient, {
             'is status 204': (r) => r.status === 204
         });
 

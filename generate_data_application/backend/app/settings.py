@@ -21,12 +21,14 @@ LOGGING = {
         'verbose': {
             'format': (
                 '%(asctime)s %(levelname)s %(name)s:%(funcName)s:%(lineno)d '
-                '[trace_id=%(otelTraceID)s span_id=%(otelSpanID)s resource.service.name=%(otelServiceName)s] '
+                '[trace_id=%(otelTraceID)s span_id=%(otelSpanID)s '
+                'resource.service.name=%(otelServiceName)s] '
                 '%(message)s'
             ),
         },
         'default': {
-            'format': '%(asctime)s - %(levelname)s - %(name)s:%(funcName)s:%(lineno)d - %(message)s',
+            'format': '%(asctime)s - %(levelname)s - %(name)s:'
+            '%(funcName)s:%(lineno)d - %(message)s',
         }
     },
     'handlers': {

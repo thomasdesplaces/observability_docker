@@ -33,7 +33,7 @@ logs:
     - name: "backend-logs"
       clients:
         - url: http://nginx:3502/loki/api/v1/push
-      positions: 
+      positions:
         filename: "/tmp/agent/loki.yaml"
       scrape_configs:
       # This value should be a problem --> https://github.com/grafana/loki/issues/7275
