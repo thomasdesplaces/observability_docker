@@ -2,12 +2,16 @@
 Function to interact with database for each object
 """
 
+import uuid
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from fastapi import HTTPException
-import uuid
-import schemas, models
-from observability import LOGGER, tracer
+import schemas
+import models
+from observability import (
+    LOGGER,
+    tracer
+)
 
 traces = tracer.get_tracer(__name__)
 LOGGER = LOGGER.getChild(__name__)
@@ -17,10 +21,11 @@ def get_client(db: Session, client_id: str):
     with traces.start_as_current_span("CRUD GET Client by ID"):
         LOGGER.info("Start GET Client by ID Query DB")
         try:
-            client = db.query(models.ClientsClass).filter(models.ClientsClass.id == client_id).first()
+            client = db.query(models.ClientsClass).filter(
+                models.ClientsClass.id == client_id).first()
         except Exception as error:
             LOGGER.error(error)
-            raise HTTPException(status_code=500)
+            raise HTTPException(status_code=500) from error
         if client is None:
             raise HTTPException(status_code=404)
         return client
@@ -33,7 +38,7 @@ def get_list(db: Session):
             clients = db.query(models.ClientsClass).all()
         except Exception as error:
             LOGGER.error(error)
-            raise HTTPException(status_code=500)
+            raise HTTPException(status_code=500) from error
         if clients is None:
             raise HTTPException(status_code=404)
         return clients
@@ -58,7 +63,7 @@ def create(db: Session, client: schemas.ClientCreate):
                 "code":"400.01",
                 "message": str(error.orig)
                 }
-            )
+            ) from error
         return new_client
 
 def put(db: Session, client_id: str, client: schemas.Clients):
@@ -66,15 +71,16 @@ def put(db: Session, client_id: str, client: schemas.Clients):
     with traces.start_as_current_span("CRUD PUT Client by ID"):
         LOGGER.info("Start PUT Client by ID Query DB")
         modify_client = models.ClientsClass(
-            id=client.id,
+            id=client_id,
             firstname=client.firstname,
             lastname=client.lastname
         )
         try:
-            db.query(models.ClientsClass).filter(models.ClientsClass.id == modify_client.id).update(values={
-                models.ClientsClass.firstname: client.firstname,
-                models.ClientsClass.lastname: client.lastname
-            }, synchronize_session=False)
+            db.query(models.ClientsClass).filter(
+                models.ClientsClass.id == modify_client.id).update(values={
+                    models.ClientsClass.firstname: client.firstname,
+                    models.ClientsClass.lastname: client.lastname
+                }, synchronize_session=False)
             db.commit()
         except Exception as error:
             LOGGER.debug(error)
@@ -86,12 +92,13 @@ def delete(db: Session, client_id: str):
     with traces.start_as_current_span("CRUD DELETE Client by ID"):
         LOGGER.info("Start DELETE Client by ID Query DB")
         try:
-            delete_client = db.query(models.ClientsClass).filter(models.ClientsClass.id == client_id).first()
+            delete_client = db.query(models.ClientsClass).filter(
+                models.ClientsClass.id == client_id).first()
             db.query(models.ClientsClass).filter(models.ClientsClass.id == client_id).delete()
             db.commit()
         except Exception as error:
             LOGGER.error(error)
-            raise HTTPException(status_code=500)
+            raise HTTPException(status_code=500) from error
         if delete_client is None:
             raise HTTPException(status_code=404)
         return None

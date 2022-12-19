@@ -1,0 +1,40 @@
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+    -   id: check-yaml
+    -   id: end-of-file-fixer
+    -   id: trailing-whitespace
+    -   id: detect-private-key
+-   repo: https://github.com/pre-commit/pygrep-hooks
+    rev: v1.9.0
+    hooks:
+    -   id: python-no-log-warn
+    -   id: python-use-type-annotations
+-   repo: local
+    hooks:
+    -   id: pylint
+        name: pylint
+        entry: pylint
+        language: system
+        types: [python]
+        args:
+          [
+            "--rcfile=.pylintrc"
+          ]
+-   repo: https://github.com/IamTheFij/docker-pre-commit
+    rev: v2.1.0
+    hooks:
+    -   id: docker-compose-check
+-   repo: https://github.com/hadolint/hadolint
+    rev: v2.12.0
+    hooks:
+    -   id: hadolint-docker
+        args: [--ignore, "DL3047",
+                --ignore, "DL4001"]
+-   repo: https://github.com/sqlfluff/sqlfluff
+    rev: 1.4.2
+    hooks:
+    -   id: sqlfluff-lint
+        args: [--exclude-rules, "L003,L014",
+                --dialect, "postgres"]

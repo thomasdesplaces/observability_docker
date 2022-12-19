@@ -19,7 +19,7 @@ datasources:
           name: TraceID
     secureJsonData:
       httpHeaderValue1: 'backend'
-  
+
   # - name: Mimir Alertmanager
   #   uid: alertmanager
   #   type: alertmanager
@@ -33,7 +33,7 @@ datasources:
   #     implementation: 'cortex'
   #   secureJsonData:
   #     httpHeaderValue1: 'demo'
-  
+
   # Loki datasource to get logs
   - uid: loki
     name: Loki
@@ -48,7 +48,7 @@ datasources:
           matcherRegex: (?:trace_id)=(\w+)
           name: TraceID
           url: $${__value.raw}
-  
+
   # Tempo datasource to get traces
   - uid: tempo
     name: Tempo
@@ -68,4 +68,4 @@ datasources:
         datasourceUid: loki
         filterBySpanID: false
         filterByTraceID: true
-        mapTagNamesEnabled: false
+        tags: ['job']

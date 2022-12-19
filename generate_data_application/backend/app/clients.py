@@ -2,13 +2,24 @@
 Function to define FastAPI routes
 """
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException
+)
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import OperationalError
-from schemas import ClientsBase, Clients
+from schemas import (
+    ClientsBase,
+    Clients
+)
 from responsesSettings import responsesMessages
-import connection, crud_clients
-from observability import LOGGER, tracer
+import connection
+import crud_clients
+from observability import (
+    LOGGER,
+    tracer
+)
 
 traces = tracer.get_tracer(__name__)
 
@@ -39,7 +50,7 @@ def get_db():
         db.close()
 
 @router.post(path="/clients",
-    response_model=Clients, 
+    response_model=Clients,
     status_code=201,
     summary="Client creation"
 )
@@ -84,7 +95,7 @@ async def get_client(client_id: str, db: Session = Depends(get_db)):
     with traces.start_as_current_span("Router GET client by ID"):
         LOGGER.info("Start GET Client by ID")
         client = crud_clients.get_client(db=db, client_id=client_id)
-        LOGGER.debug("Return client : %s" % str(client))
+        LOGGER.debug(f"Return client : {str(client)}")
         return client
 
 @router.put(path="/clients/{client_id}",
@@ -108,7 +119,7 @@ async def put_client(client_id: str, client: ClientsBase, db: Session = Depends(
             return ""
 
 @router.delete(path="/clients/{client_id}",
-    response_model=None, 
+    response_model=None,
     status_code=204,
     summary="Delete a specific client"
 )

@@ -9,46 +9,46 @@
 
 # Why
 
-This repository contain an observability stack using [<img src="./assets/grafana_logo-web.svg" alt="Observability" width="200"/>](https://grafana.com/oss/) tools.   
-These one is deploying with Docker Compose to test all the stack's tools.  
+This repository contain an observability stack using [<img src="./assets/grafana_logo-web.svg" alt="Observability" width="200"/>](https://grafana.com/oss/) tools.
+These one is deploying with Docker Compose to test all the stack's tools.
 
-It is only a testing stack with no security, no production-ready configuration, ...  
-This for testing purpose.  
+It is only a testing stack with no security, no production-ready configuration, ...
+This for testing purpose.
 
 # Architecture
 
-The observability stack is composed by Mimir, Loki and Tempo which are deployed in Monolithic mode with 3 instances of each.  
-The application stack is composed by a FastAPI application with some routes and PostgreSQL database with 1 table.  
-Logs are written in a log file, scrape by [Grafana Promtail](https://grafana.com/docs/loki/latest/clients/promtail/) and send to Grafana Agent.  
-Metrics are exposed via [Prometheus Client](https://github.com/prometheus/client_python) and scraped by Grafana Agent.  
-Traces are sent via [Opentelemetry SDK](https://github.com/open-telemetry/opentelemetry-python) to Grafana Agent.  
+The observability stack is composed by Mimir, Loki and Tempo which are deployed in Monolithic mode with 3 instances of each.
+The application stack is composed by a FastAPI application with some routes and PostgreSQL database with 1 table.
+Logs are written in a log file, scrape by [Grafana Promtail](https://grafana.com/docs/loki/latest/clients/promtail/) and send to Grafana Agent.
+Metrics are exposed via [Prometheus Client](https://github.com/prometheus/client_python) and scraped by Grafana Agent.
+Traces are sent via [Opentelemetry SDK](https://github.com/open-telemetry/opentelemetry-python) to Grafana Agent.
 Unit tests are performed by [k6.io](https://k6.io).
 
 ![alt schema](./assets/Observability-Grafana_Stack.png)
 
 # Prerequisite
 
-This repository is run on Mac M1 (ARM architecture).  
-If you want to use another architecture, be sure to modify the Dockerfiles which import arm binary (ex. promtail on the app Dockerfile).  
+This repository is run on Mac M1 (ARM architecture).
+If you want to use another architecture, be sure to modify the Dockerfiles which import arm binary (ex. promtail on the app Dockerfile).
 
-1. Install [Docker](https://docs.docker.com/engine/install/).  
-2. Create Docker network :  
+1. Install [Docker](https://docs.docker.com/engine/install/).
+2. Create Docker network :
 `docker network create observability-network`
 
 # How deploy it
 
-1. Clone this repository :  
-`git clone https://github.com/tonyglandyl28/observability_docker.git`  
-2. Build & deploy observability stack :  
-`docker-compose --profile grafana up --build`  
-3. Access to Grafana for visualization :  
+1. Clone this repository :
+`git clone https://github.com/tonyglandyl28/observability_docker.git`
+2. Build & deploy observability stack :
+`docker-compose --profile grafana up --build`
+3. Access to Grafana for visualization :
 *http://localhost:3000*
-4. Build & deploy application stack :  
-`docker-compose --profile application up --build`  
+4. Build & deploy application stack :
+`docker-compose --profile application up --build`
 
 # How to send logs/metrics/traces
 
-Deploy an application or database or other on the same docker network with these parameters :  
+Deploy an application or database or other on the same docker network with these parameters :
 1. **Traces :**
 - Protocol : *http*
 - Host : *nginx*
@@ -64,13 +64,13 @@ Deploy an application or database or other on the same docker network with these
 
 # Ports configuration
 
-1. Get Logs :  
+1. Get Logs :
 Promtail --> Nginx : 3500 --> Agent : 3501 --> Nginx : 3502 --> Loki : 3503
 
-2. Get Traces :  
+2. Get Traces :
 oTel SDK --> Nginx : 3600 --> Agent : 3601 --> Nginx : 3602 --> Tempo : 3603
 
-3. Get Metrics :  
+3. Get Metrics :
 Prometheus Exporter : 8000 <-- Agent --> Nginx : 3702 --> Mimir : 3703
 
 4. Consult Logs on Grafana :
