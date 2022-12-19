@@ -144,8 +144,12 @@ def setting_otlp(app: ASGIApp) -> TracerProvider():
     tracer = TracerProvider(resource=resource)
     trace.set_tracer_provider(tracer)
 
-    otlp_exporter = OTLPSpanExporter(endpoint=f"{settings.OTEL_PROTOCOL}://{settings.OTEL_HOST}:\
-        {settings.OTEL_PORT}{settings.OTEL_PATH}")
+    otlp_exporter = OTLPSpanExporter(endpoint="{0}://{1}:{2}{3}".format(
+        settings.OTEL_PROTOCOL,
+        settings.OTEL_HOST,
+        settings.OTEL_PORT,
+        settings.OTEL_PATH)
+    )
 
     tracer.add_span_processor(BatchSpanProcessor(otlp_exporter))
 

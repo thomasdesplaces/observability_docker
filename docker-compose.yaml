@@ -320,8 +320,6 @@ services:
     build:
       context: generate_data_application/db
       dockerfile: Dockerfile
-    # volumes:
-    #   - ./generate_data_application/db/postgres.conf:/etc/postgresql/postgresql.conf
     command: postgres -c config_file=/etc/postgresql/postgresql.conf
     ports:
       - 5432:5432

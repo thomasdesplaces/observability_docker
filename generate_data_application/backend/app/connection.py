@@ -12,11 +12,13 @@ LOGGER = LOGGER.getChild(__name__)
 
 # Database connexion
 DATABASE_SETTINGS = settings.DATABASES['local']
-SQLALCHEMY_DATABASE_URL = f'postgresql://{DATABASE_SETTINGS.get("username")}:\
-        {DATABASE_SETTINGS.get("password")}@\
-        {DATABASE_SETTINGS.get("host")}:\
-        {DATABASE_SETTINGS.get("port")}/\
-        {DATABASE_SETTINGS.get("database")}'
+SQLALCHEMY_DATABASE_URL = "postgresql://{0}:{1}@{2}:{3}/{4}".format(
+    DATABASE_SETTINGS.get("username"),
+    DATABASE_SETTINGS.get("password"),
+    DATABASE_SETTINGS.get("host"),
+    DATABASE_SETTINGS.get("port"),
+    DATABASE_SETTINGS.get("database")
+)
 
 try:
     engine = create_engine(SQLALCHEMY_DATABASE_URL)
