@@ -31,7 +31,8 @@ repos:
     hooks:
     -   id: hadolint-docker
         args: [--ignore, "DL3047",
-                --ignore, "DL4001"]
+                --ignore, "DL4001",
+                --ignore, "DL3008"]
 -   repo: https://github.com/sqlfluff/sqlfluff
     rev: 1.4.2
     hooks:

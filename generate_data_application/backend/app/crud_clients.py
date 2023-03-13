@@ -13,8 +13,9 @@ from observability import (
     tracer
 )
 
-traces = tracer.get_tracer(__name__)
 LOGGER = LOGGER.getChild(__name__)
+
+traces = tracer.get_tracer(__name__)
 
 def get_client(db: Session, client_id: str):
     """Get all details about a specific client"""

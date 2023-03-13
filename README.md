@@ -2,7 +2,7 @@
     <img src="./assets/observability.png" alt="Observability" width="500"/>
 </p>
 
-![alt version](https://img.shields.io/badge/Version-0.0.2-violet)
+![alt version](https://img.shields.io/badge/Version-0.0.3-violet)
 ![alt production](https://img.shields.io/badge/Production--Ready-No-green)
 ![alt docker](https://img.shields.io/badge/Deployment_tool-Docker--Compose-orange)
 ![alt ARM](https://img.shields.io/badge/Platform-ARM--M1-red)
@@ -39,10 +39,13 @@ If you want to use another architecture, be sure to modify the Dockerfiles which
 
 1. Clone this repository :
 `git clone https://github.com/tonyglandyl28/observability_docker.git`
+
 2. Build & deploy observability stack :
 `docker-compose --profile grafana up --build`
+
 3. Access to Grafana for visualization :
 *http://localhost:3000*
+
 4. Build & deploy application stack :
 `docker-compose --profile application up --build`
 
@@ -60,9 +63,11 @@ Deploy an application or database or other on the same docker network with these
 - Port : *3500*
 - Path : */loki/api/v1/push*
 3. **Metrics :**
-- Expose with Prometheus (or based on Prometheus) on port : `8000` and modify the **targets** value in [agent.yaml](./agent/agent.yaml) (line 24).
+- Expose with Prometheus (or based on Prometheus) on example port : `8000` and modify the **targets** value in [agent.yaml](./agent/agent.yaml) (line 24).
 
 # Ports configuration
+
+## Observability stack
 
 1. Get Logs :
 Promtail --> Nginx : 3500 --> Agent : 3501 --> Nginx : 3502 --> Loki : 3503
@@ -71,7 +76,7 @@ Promtail --> Nginx : 3500 --> Agent : 3501 --> Nginx : 3502 --> Loki : 3503
 oTel SDK --> Nginx : 3600 --> Agent : 3601 --> Nginx : 3602 --> Tempo : 3603
 
 3. Get Metrics :
-Prometheus Exporter : 8000 <-- Agent --> Nginx : 3702 --> Mimir : 3703
+Prometheus Exporter : 5050 (on path _/metrics_) <-- Agent --> Nginx : 3702 --> Mimir : 3703
 
 4. Consult Logs on Grafana :
 Grafana --> Nginx : 4502 --> Loki : 3503
@@ -81,6 +86,14 @@ Grafana --> Nginx : 4602 --> Tempo : 4603
 
 6. Consult Metrics on Grafana :
 Grafana --> Nginx : 4702 --> Mimir : 3703
+
+## Application stack
+
+1. Front port : 5055
+
+2. Backend/API port : 5050
+
+3. Database port : 5432
 
 # Sources
 
@@ -97,12 +110,13 @@ Grafana --> Nginx : 4702 --> Mimir : 3703
 | [<img src="./assets/nginx.png" alt="NGinx" width="200"/>](https://www.nginx.com/) | Latest | Used to load balance traffic between each instance. Based on https://github.com/nginx/nginx |
 
 ## Application stack
-Thanks to [@Blueswen](https://github.com/blueswen) for the FastAPI observabnility configuration.
+Thanks to [@Blueswen](https://github.com/blueswen) for the FastAPI observability configuration.
 
 |                   Logo/Link                   |      Version    |               Usage                 |
 |:---------------------------------------------:|-----------------|-------------------------------------|
 | [<img src="./assets/promtail.png" alt="Promtail" width="200">](https://grafana.com/docs/loki/latest/clients/promtail/) | Latest | Used to scrape application logs from file. |
 | [<img src="./assets/fastapi.png" alt="FastAPI" width="200">](https://fastapi.tiangolo.com) | 0.88.0 | Used to expose API. Based on  https://github.com/Blueswen/fastapi-observability |
 | [<img src="./assets/postgresql.png" alt="PostgreSQL" width="200">](https://www.postgresql.org) | 15-Bullseye | Used to store application data. |
+| [<img src="./assets/prometheus.png" width="200">](https://github.com/prometheus-community/postgres_exporter) | Latest | Used to export Postgres metrics. Based on https://hub.docker.com/r/wrouesnel/postgres_exporter |
 | [<img src="./assets/k6.png" alt="k6.io" width="200">](https://www.k6.io) | Latest | Used to performed unit tests. |
 | [<img src="./assets/otel.png" alt="OpenTelemetry" width="200">](https://github.com/open-telemetry/opentelemetry-python) | 1.15.0 | Used to generate traces. |
