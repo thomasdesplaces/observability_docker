@@ -12,7 +12,6 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
 from opentelemetry.instrumentation.logging import LoggingInstrumentor
-from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from starlette.types import ASGIApp
 from starlette.requests import Request
 from starlette.responses import Response
@@ -65,8 +64,6 @@ REQUESTS_IN_PROGRESS = Gauge(
 
 logging.config.dictConfig(settings.LOGGING)
 LOGGER = logging.getLogger(settings.APP_NAME)
-
-tracer = TracerProvider()
 
 class PrometheusMiddleware(BaseHTTPMiddleware):
     """Add function to HTTP Middleware"""
@@ -130,7 +127,7 @@ def metrics(request: Request) -> Response:
     """Metrics configuration"""
     return Response(generate_latest(REGISTRY), headers={"Content-Type": CONTENT_TYPE_LATEST})
 
-def setting_otlp(app: ASGIApp) -> TracerProvider():
+def setting_otlp() -> TracerProvider():
     """Traces configuration"""
     resource = Resource(attributes={
         "service.name": settings.APP_NAME,
@@ -140,7 +137,6 @@ def setting_otlp(app: ASGIApp) -> TracerProvider():
     })
 
     # Set the trace provider
-    global tracer
     tracer = TracerProvider(resource=resource)
     trace.set_tracer_provider(tracer)
 
@@ -155,9 +151,6 @@ def setting_otlp(app: ASGIApp) -> TracerProvider():
 
     LoggingInstrumentor().instrument(set_logging_format=True)
 
-    FastAPIInstrumentor.instrument_app(app, tracer_provider=tracer)
-
     return tracer
 
-# Start HTTP server to expose Prometheus metrics
-# prom_server = start_http_server(settings.PROMETHEUS_PORT)
+tracer = setting_otlp()

@@ -68,4 +68,6 @@ datasources:
         datasourceUid: loki
         filterBySpanID: false
         filterByTraceID: true
+        spanEndTimeShift: "5m"
+        spanStartTimeShift: "-5m"
         tags: ['job']

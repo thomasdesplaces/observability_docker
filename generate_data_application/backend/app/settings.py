@@ -4,7 +4,7 @@ Application settings
 
 APP_NAME = "ClientsBackendApi"
 
-DEBUG = True
+DEBUG = False
 
 HOST = '0.0.0.0'
 PORT = 5050
@@ -33,7 +33,7 @@ LOGGING = {
     },
     'handlers': {
         'console': {
-            'level': 'DEBUG' if DEBUG else 'INFO',
+            'level': 'INFO',
             'class': 'logging.StreamHandler',
             'formatter': 'verbose'
         },
@@ -47,15 +47,15 @@ LOGGING = {
         }
     },
     'loggers': {
-        'FastApiBackend': {
+        'ClientsBackendApi': {
             'handlers': ['console','file'],
-            'level': 'DEBUG' if DEBUG else 'INFO',
+            'level': 'INFO',
             'propagate': False,
         },
     },
   'root': {
       'handlers': ['console','file'],
-      'level': 'DEBUG' if DEBUG else 'INFO',
+      'level': 'INFO',
   },
 }
 

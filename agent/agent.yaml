@@ -26,7 +26,27 @@ metrics:
     #   scrape_configs:
     #     - job_name: "backend_flask"
     #       static_configs:
-    #       - targets: ['api:8000']
+    #       - targets: ['myapp:5055']
+    - name: "loki-metrics"
+      scrape_configs:
+        - job_name: "loki_metrics"
+          static_configs:
+          - targets: ['nginx:3502']
+    - name: "tempo-metrics"
+      scrape_configs:
+        - job_name: "tempo_metrics"
+          static_configs:
+          - targets: ['nginx:4602']
+    - name: "mimir-metrics"
+      scrape_configs:
+        - job_name: "mimir_metrics"
+          static_configs:
+          - targets: ['nginx:4702']
+    - name: "postgres-metrics"
+      scrape_configs:
+        - job_name: "postgres_metrics"
+          static_configs:
+          - targets: ['db_exporter:9187']
 
 logs:
   configs:

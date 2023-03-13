@@ -19,11 +19,13 @@ import crud_clients
 from observability import (
     LOGGER,
     tracer
-)
+)   
 
-traces = tracer.get_tracer(__name__)
+
 
 LOGGER = LOGGER.getChild(__name__)
+
+traces = tracer.get_tracer(__name__)
 
 router = APIRouter(
     tags=["clients"],

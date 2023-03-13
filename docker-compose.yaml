@@ -326,6 +326,21 @@ services:
     labels:
       namespace: monitoring
 
+  db_exporter:
+    profiles:
+      - application
+    container_name: db_exporter
+    image: wrouesnel/postgres_exporter:latest
+    environment:
+      # DATA_SOURCE_NAME: "postgresql://postgres:docker@db:5432/postgres?sslmode=disable"
+      - DATA_SOURCE_URI=db:5432/postgres?sslmode=disable
+      - DATA_SOURCE_USER=postgres
+      - DATA_SOURCE_PASS=docker
+    depends_on:
+      - db
+    labels:
+      namespace: monitoring
+
   ######################################################################################
   ######################################################################################
   ################################### Unit tests #######################################

@@ -9,7 +9,7 @@ import { sleep, check, group } from 'k6';
 // };
 export const options = {
     stages: [
-        { duration: '30s', target: 3}//,
+        { duration: '10s', target: 3}//,
         //{ duration: '20s', target: 0}
     ]
 }
