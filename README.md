@@ -2,7 +2,7 @@
     <img src="./assets/observability.png" alt="Observability" width="500"/>
 </p>
 
-![alt version](https://img.shields.io/badge/Version-0.0.2-violet)
+![alt version](https://img.shields.io/badge/Version-0.0.3-violet)
 ![alt production](https://img.shields.io/badge/Production--Ready-No-green)
 ![alt docker](https://img.shields.io/badge/Deployment_tool-Docker--Compose-orange)
 ![alt ARM](https://img.shields.io/badge/Platform-ARM--M1-red)
