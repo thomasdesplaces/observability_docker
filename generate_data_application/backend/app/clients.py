@@ -19,7 +19,7 @@ import crud_clients
 from observability import (
     LOGGER,
     tracer
-)   
+)
 
 
 

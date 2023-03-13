@@ -72,8 +72,9 @@ services:
     volumes:
       - "./grafana/datasource.yaml:/etc/grafana/provisioning/datasources/default.yaml"
       - "./grafana/dashboard.yaml:/etc/grafana/provisioning/dashboards/default.yaml"
-      - "./grafana/catalogue.json:/var/lib/grafana/dashboards/catalogue.json"
-      - "./grafana/container_process.json:/var/lib/grafana/dashboards/container_process.json"
+      - "./grafana/fastapi.json:/var/lib/grafana/dashboards/fastapi.json"
+      - "./grafana/db.json:/var/lib/grafana/dashboards/db.json"
+      #- "./grafana/container_process.json:/var/lib/grafana/dashboards/container_process.json"
       - "./grafana/config.ini:/etc/grafana/grafana.ini"
     labels:
       namespace: monitoring
