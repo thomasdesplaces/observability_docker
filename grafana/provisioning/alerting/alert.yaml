@@ -20,7 +20,7 @@ groups:
           from: 60
           to: 0
         model:
-          expression: "rate(flask_http_request_total{method=\"GET\"}[1m]) > 0"
+          expression: "rate(fastapi_requests_total{method=\"GET\"}[1m]) > 0"
           intervalMs: 1000
           maxDataPoints: 43200
           refId: A
@@ -56,28 +56,28 @@ groups:
       executionErrorState: Error
       for: 2m
       annotations:
-        description: "Description Test"
-        summary: "Summary Test"
-        runbook_url: "https://google.fr"
+        description: "Receive more than 1 call per minute on GET method"
+        summary: "This alert is just a demonstration on how to add alert and notification"
+        runbook_url: ""
       labels:
         Creator: TDE
         severity: INFO
 
 contactPoints:
   - orgId: 1
-    name: Slack2
+    name: Slack
     receivers:
-    - uid: Slack2
+    - uid: Slack
       type: slack
       settings:
         mentionChannel: here
         mentionUsers: UUC1MDEE8
-        url: https://hooks.slack.com/services/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
+        url: https://hooks.slack.com/services/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
         username: Grafana Test Auto Alert
 
 policies:
   - orgId: 1
-    receiver: Slack2
+    receiver: Slack
     group_by:
     - grafana_folder
     - alertname
