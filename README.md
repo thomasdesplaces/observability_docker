@@ -38,7 +38,7 @@ If you want to use another architecture, be sure to modify the Dockerfiles which
 # How deploy it
 
 1. Clone this repository :
-`git clone https://github.com/tonyglandyl28/observability_docker.git`
+`git clone https://github.com/thomasdesplaces/observability_docker.git`
 
 2. Build & deploy observability stack :
 `docker-compose --profile grafana up --build`
