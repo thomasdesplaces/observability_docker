@@ -66,15 +66,12 @@ services:
     profiles:
         - grafana
     container_name: Grafana
-    image: grafana/grafana:9.3.1
+    image: grafana/grafana:9.4.1
     ports:
       - 3000:3000
     volumes:
-      - "./grafana/datasource.yaml:/etc/grafana/provisioning/datasources/default.yaml"
-      - "./grafana/dashboard.yaml:/etc/grafana/provisioning/dashboards/default.yaml"
-      - "./grafana/fastapi.json:/var/lib/grafana/dashboards/fastapi.json"
-      - "./grafana/db.json:/var/lib/grafana/dashboards/db.json"
-      #- "./grafana/container_process.json:/var/lib/grafana/dashboards/container_process.json"
+      - "./grafana/provisioning/:/etc/grafana/provisioning/"
+      - "./grafana/dashboards/:/var/lib/grafana/dashboards/"
       - "./grafana/config.ini:/etc/grafana/grafana.ini"
     labels:
       namespace: monitoring
@@ -82,7 +79,7 @@ services:
       GF_AUTH_ANONYMOUS_ENABLED: "true"
       GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
       GF_AUTH_DISABLE_LOGIN_FORM: "true"
-      GF_LOG_LEVEL: "debug"
+      GF_LOG_LEVEL: "info"
 
   ######################################################################################
   ######################################################################################

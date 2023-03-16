@@ -1,3 +1,14 @@
+0.0.4 - 2023-03-16
+===================
+
+### Features
+- Add [Alert Manager](./grafana/provisioning/alerting/) #2 (@thomasdesplaces)
+
+### Updating
+- Update Change Grafana Agent [Log Level](./agent/agent.yaml) to _error_  (@thomasdesplaces)
+- Update Grafana [folders](./grafana/) and adapt [Docker Compose](./docker-compose.yaml) (@thomasdesplaces)
+
+
 0.0.3 - 2023-03-13
 ===================
 

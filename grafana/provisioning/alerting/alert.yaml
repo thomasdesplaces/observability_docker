@@ -12,29 +12,33 @@ groups:
     rules:
     - uid: More_than_1_call_per_minute
       title: More than 1 call per minute
-      condition: B
+      condition: C
       data:
       - refId: A
         datasourceUid: mimir
         relativeTimeRange:
-          from: 60
+          from: 300
           to: 0
         model:
-          expression: "rate(flask_http_request_total{method=\"GET\"}[1m]) > 0"
+          datasource:
+            type: prometheus
+            uid: 'mimir'
+          expr: 'rate(fastapi_requests_total{method="GET"}[1m]) > 0'
+          hide: false
           intervalMs: 1000
+          legendFormat: '__auto'
           maxDataPoints: 43200
+          range: true
           refId: A
       - refId: B
-        datasourceUid: "-100"
+        datasourceUid: "__expr__"
         relativeTimeRange:
-          from: 60
+          from: 300
           to: 0
         model:
           conditions:
           - evaluator:
-              params:
-              - 0
-              - 0
+              params: []
               type: gt
             operator:
               type: and
@@ -42,42 +46,70 @@ groups:
               params:
               - A
             reducer:
-              type: count
+              type: last
             type: query
           datasource:
             type: __expr__
-            uid: __expr__
+            uid: '__expr__'
           expression: A
           intervalMs: 1000
           maxDataPoints: 43200
           refId: B
-          type: classic_conditions
-      noDataState: OK
+          type: reduce
+          reducer: mean
+      - refId: C
+        datasourceUid: "__expr__"
+        relativeTimeRange:
+          from: 300
+          to: 0
+        model:
+          conditions:
+          - evaluator:
+              params:
+              - 0
+              type: gt
+            operator:
+              type: and
+            query:
+              params:
+              - C
+            reducer:
+              type: last
+            type: query
+          datasource:
+            type: __expr__
+            uid: '__expr__'
+          expression: B
+          intervalMs: 1000
+          maxDataPoints: 43200
+          refId: C
+          type: threshold
+      noDataState: NoData
       executionErrorState: Error
-      for: 2m
+      for: 5m
       annotations:
-        description: "Description Test"
-        summary: "Summary Test"
-        runbook_url: "https://google.fr"
+        description: "Receive more than 1 call per minute on GET method"
+        summary: "This alert is just a demonstration on how to add alert and notification"
+        runbook_url: ""
       labels:
         Creator: TDE
         severity: INFO
 
 contactPoints:
   - orgId: 1
-    name: Slack2
+    name: Slack
     receivers:
-    - uid: Slack2
+    - uid: Slack
       type: slack
       settings:
         mentionChannel: here
-        mentionUsers: UUC1MDEE8
-        url: https://hooks.slack.com/services/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
+        mentionUsers: XXXXXXX
+        url: https://hooks.slack.com/services/XXXXX/YYYYY/ZZZZZZZZ
         username: Grafana Test Auto Alert
 
 policies:
   - orgId: 1
-    receiver: Slack2
+    receiver: Slack
     group_by:
     - grafana_folder
     - alertname
