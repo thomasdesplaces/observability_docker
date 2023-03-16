@@ -1,0 +1,18 @@
+name: Run commands when issues are labeled
+run-name: ${{ github.actor }} is learning GitHub Actions
+on:
+  issues:
+    types: [labeled]
+jobs:
+  main:
+    if: ${{ github.event.pull_request == false }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Action
+        uses: actions/checkout@v3
+      - name: Init Python version
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10' 
+      - name: Install requirements
+        run: pip install -r ../../generate_data_application/backend/config/requirements.txt
