@@ -389,6 +389,10 @@ services:
     build:
       context: generate_data_application/load_tests
       dockerfile: Dockerfile
+    environment:
+      - K6_PROMETHEUS_RW_SERVER_URL=http://nginx:3702/api/v1/push
+      - K6_PROMETHEUS_RW_HEADERS_X-Scope-OrgID=backend
+      - K6_PROMETHEUS_RW_TREND_AS_NATIVE_HISTOGRAM=true
     depends_on:
       - backend
     labels:
