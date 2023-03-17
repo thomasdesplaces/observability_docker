@@ -7,7 +7,7 @@ apiVersion: 1
 groups:
   - orgId: 1
     name: Managed
-    folder: GET
+    folder: Sample
     interval: 60s
     rules:
     - uid: More_than_1_call_per_minute

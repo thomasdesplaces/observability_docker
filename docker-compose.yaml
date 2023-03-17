@@ -276,6 +276,21 @@ services:
       - mimir3-data:/data
     labels:
       namespace: monitoring
+  
+  # Continuous tests
+  mimir-continuous-test:
+    profiles:
+      - grafana
+    container_name: Mimir-Continuous-Tests
+    image: grafana/mimir-continuous-test:latest
+    command: "-tests.write-endpoint http://nginx:3702 -tests.read-endpoint http://nginx:4702/prometheus -server.metrics-port 8085"
+    depends_on:
+      - mimir1
+      - mimir2
+      - mimir3
+    labels:
+      namespace: monitoring
+
 
   ######################################################################################
   ######################################################################################
@@ -345,6 +360,7 @@ services:
     labels:
       namespace: monitoring
 
+  # Metrics
   db_exporter:
     profiles:
       - application

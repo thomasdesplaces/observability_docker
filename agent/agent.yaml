@@ -39,7 +39,7 @@ metrics:
           - targets: ['nginx:4602']
     - name: "mimir-metrics"
       scrape_configs:
-        - job_name: "mimir_metrics"
+        - job_name: "monitoring/mimir"
           static_configs:
           - targets: ['nginx:4702']
     - name: "postgres-metrics"
@@ -52,6 +52,11 @@ metrics:
         - job_name: "cadvisor_metrics"
           static_configs:
           - targets: ['cadvisor:8080']
+    - name: "mimir-continuous-tests-metrics"
+      scrape_configs:
+        - job_name: "mimir-continuous-tests_metrics"
+          static_configs:
+          - targets: ['mimir-continuous-test:8085']
 
 logs:
   configs:

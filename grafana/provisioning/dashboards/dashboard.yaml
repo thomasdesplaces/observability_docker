@@ -4,7 +4,7 @@ apiVersion: 1
 providers:
   - name: "Prometheus"
     orgId: 1
-    folder: ""
+    folder: Sample
     type: file
     disableDeletion: false
     editable: true
