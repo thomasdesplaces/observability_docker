@@ -1,0 +1,67 @@
+version: "3.9"
+
+networks:
+  default:
+    name: observability-network
+    external: true
+
+services:
+
+  ######################################################################################
+  ######################################################################################
+  ############################# GRAFANA TEMPO TRACES ###################################
+  ######################################################################################
+  ######################################################################################
+  tempo1:
+    profiles:
+        - grafana
+    container_name: Tempo-1
+    image: grafana/tempo:1.5.0
+    command: "-target=scalable-single-binary -config.file=/etc/tempo.yaml"
+    volumes:
+      - ./tempo/tempo.yaml:/etc/tempo.yaml
+    restart: always
+    networks:
+      default:
+        aliases:
+          - tempo
+    depends_on:
+      - minio
+    labels:
+      namespace: monitoring
+
+  tempo2:
+    profiles:
+        - grafana
+    container_name: Tempo-2
+    image: grafana/tempo:1.5.0
+    command: "-target=scalable-single-binary -config.file=/etc/tempo.yaml"
+    volumes:
+      - ./tempo/tempo.yaml:/etc/tempo.yaml
+    restart: always
+    depends_on:
+      - minio
+    networks:
+      default:
+        aliases:
+          - tempo
+    labels:
+      namespace: monitoring
+
+  tempo3:
+    profiles:
+        - grafana
+    container_name: Tempo-3
+    image: grafana/tempo:1.5.0
+    command: "-target=scalable-single-binary -config.file=/etc/tempo.yaml"
+    volumes:
+      - ./tempo/tempo.yaml:/etc/tempo.yaml
+    restart: always
+    depends_on:
+      - minio
+    networks:
+      default:
+        aliases:
+          - tempo
+    labels:
+      namespace: monitoring

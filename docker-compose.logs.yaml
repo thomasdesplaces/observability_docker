@@ -1,0 +1,64 @@
+version: "3.9"
+
+networks:
+  default:
+    name: observability-network
+    external: true
+
+services:
+
+  ######################################################################################
+  ######################################################################################
+  ############################### GRAFANA LOKI LOGS ####################################
+  ######################################################################################
+  ######################################################################################
+  loki1:
+    profiles:
+        - grafana
+    container_name: Loki-1
+    image: grafana/loki:2.7.0
+    command: "-config.file=/etc/loki/config.yaml -target=all"
+    volumes:
+      - ./loki/loki-config.yaml:/etc/loki/config.yaml
+    depends_on:
+      - minio
+    networks:
+      default:
+        aliases:
+          - loki
+    labels:
+      namespace: monitoring
+
+  loki2:
+    profiles:
+        - grafana
+    container_name: Loki-2
+    image: grafana/loki:2.7.0
+    command: "-config.file=/etc/loki/config.yaml -target=all"
+    volumes:
+      - ./loki/loki-config.yaml:/etc/loki/config.yaml
+    depends_on:
+      - minio
+    networks:
+      default:
+        aliases:
+          - loki
+    labels:
+      namespace: monitoring
+
+  loki3:
+    profiles:
+        - grafana
+    container_name: Loki-3
+    image: grafana/loki:2.7.0
+    command: "-config.file=/etc/loki/config.yaml -target=all"
+    volumes:
+      - ./loki/loki-config.yaml:/etc/loki/config.yaml
+    depends_on:
+      - minio
+    networks:
+      default:
+        aliases:
+          - loki
+    labels:
+      namespace: monitoring

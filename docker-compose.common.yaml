@@ -1,0 +1,129 @@
+version: "3.9"
+
+networks:
+  default:
+    name: observability-network
+    external: true
+
+volumes:
+  mimir1-data:
+  mimir2-data:
+  mimir3-data:
+  minio-data:
+
+services:
+  ######################################################################################
+  ######################################################################################
+  ################################# MINIO STORAGE ######################################
+  ######################################################################################
+  ######################################################################################
+  minio:
+    profiles:
+      - grafana
+    container_name: Minio
+    image: minio/minio
+    entrypoint: [""]
+    command: ["sh", "-c", "mkdir -p /data/mimir && mkdir -p /data/tempo && mkdir -p /data/loki-data && mkdir -p /data/loki-ruler && minio server --quiet /data"]
+    environment:
+      - MINIO_ROOT_USER=mimir
+      - MINIO_ROOT_PASSWORD=supersecret
+    volumes:
+      - minio-data:/data
+    labels:
+      namespace: monitoring
+  
+  ######################################################################################
+  ######################################################################################
+  #################################### CADVISOR ########################################
+  ######################################################################################
+  ######################################################################################
+  cadvisor:
+    profiles:
+      - grafana
+    container_name: cadvisor
+    image: zcube/cadvisor:latest
+    ports:
+    - 8080:8080
+    command:
+    - --raw_cgroup_prefix_whitelist=/docker/
+    volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:rw
+    - /sys:/sys:ro
+    - /dev/disk/:/dev/disk:ro
+    - /path/to/lib/docker/:/var/lib/docker:ro
+
+  ######################################################################################
+  ######################################################################################
+  ################################## NGINX PROXY #######################################
+  ######################################################################################
+  ######################################################################################
+  nginx:
+    profiles:
+      - grafana
+    container_name: Nginx
+    image: nginx:latest
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - mimir1
+      - mimir2
+      - mimir3
+      - tempo1
+      - tempo2
+      - tempo3
+      - loki1
+      - loki2
+      - loki3
+    labels:
+      namespace: monitoring
+
+  ######################################################################################
+  ######################################################################################
+  ############################# GRAFANA VISUALIZATION ##################################
+  ######################################################################################
+  ######################################################################################
+  grafana:
+    profiles:
+        - grafana
+    container_name: Grafana
+    image: grafana/grafana:9.4.1
+    ports:
+      - 3000:3000
+    volumes:
+      - "./grafana/provisioning/:/etc/grafana/provisioning/"
+      - "./grafana/dashboards/:/var/lib/grafana/dashboards/"
+      - "./grafana/config.ini:/etc/grafana/grafana.ini"
+    labels:
+      namespace: monitoring
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
+      GF_AUTH_DISABLE_LOGIN_FORM: "true"
+      GF_LOG_LEVEL: "info"
+  
+  ######################################################################################
+  ######################################################################################
+  ############################### GRAFANA AGENT SCRAPE #################################
+  ######################################################################################
+  ######################################################################################
+  agent:
+    profiles:
+      - grafana
+    container_name: Agent
+    image: grafana/agent:main-6f9d397
+    volumes:
+      - ./agent/agent.yaml:/etc/agent.yaml
+    command:
+      - --config.file=/etc/agent.yaml
+    depends_on:
+      - tempo1
+      - tempo2
+      - tempo3
+      - mimir1
+      - mimir2
+      - mimir3
+      - loki1
+      - loki2
+      - loki3
+

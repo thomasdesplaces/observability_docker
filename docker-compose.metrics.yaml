@@ -1,0 +1,72 @@
+version: "3.9"
+
+networks:
+  default:
+    name: observability-network
+    external: true
+
+services:
+
+  ######################################################################################
+  ######################################################################################
+  ############################## GRAFANA MIMIR METRICS #################################
+  ######################################################################################
+  ######################################################################################
+  mimir1:
+    profiles:
+      - grafana
+    container_name: Mimir-1
+    image: grafana/mimir:2.4.0
+    command: ["-config.file=/etc/mimir.yaml"]
+    hostname: mimir1
+    depends_on:
+      - minio
+    volumes:
+      - ./mimir/mimir.yaml:/etc/mimir.yaml
+      - mimir1-data:/data
+    labels:
+      namespace: monitoring
+
+  mimir2:
+    profiles:
+      - grafana
+    container_name: Mimir-2
+    image: grafana/mimir:2.4.0
+    command: ["-config.file=/etc/mimir.yaml"]
+    hostname: mimir2
+    depends_on:
+      - minio
+    volumes:
+      - ./mimir/mimir.yaml:/etc/mimir.yaml
+      - mimir2-data:/data
+    labels:
+      namespace: monitoring
+
+  mimir3:
+    profiles:
+      - grafana
+    container_name: Mimir-3
+    image: grafana/mimir:2.4.0
+    command: ["-config.file=/etc/mimir.yaml"]
+    hostname: mimir3
+    depends_on:
+      - minio
+    volumes:
+      - ./mimir/mimir.yaml:/etc/mimir.yaml
+      - mimir3-data:/data
+    labels:
+      namespace: monitoring
+  
+  # Continuous tests
+  mimir-continuous-test:
+    profiles:
+      - grafana
+    container_name: Mimir-Continuous-Tests
+    image: grafana/mimir-continuous-test:latest
+    command: "-tests.write-endpoint http://nginx:3702 -tests.read-endpoint http://nginx:4702/prometheus -server.metrics-port 8085"
+    depends_on:
+      - mimir1
+      - mimir2
+      - mimir3
+    labels:
+      namespace: monitoring

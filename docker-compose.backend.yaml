@@ -1,0 +1,91 @@
+version: "3.9"
+
+networks:
+  default:
+    name: observability-network
+    external: true
+
+services:
+
+  ######################################################################################
+  ######################################################################################
+  ############################## BACKEND APPLICATION ###################################
+  ######################################################################################
+  ######################################################################################
+  backend:
+    profiles:
+      - application
+    container_name: backend
+    image: backend
+    build:
+      context: generate_data_application/backend
+      dockerfile: Dockerfile
+    ports:
+      - 5050:5050
+      - 8000:8000
+    depends_on:
+      - db
+    labels:
+      namespace: monitoring
+
+  ######################################################################################
+  ######################################################################################
+  ############################## DATABASE APPLICATION ##################################
+  ######################################################################################
+  ######################################################################################
+  db:
+    profiles:
+      - application
+    container_name: db
+    image: db
+    build:
+      context: generate_data_application/db
+      dockerfile: Dockerfile
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf
+    ports:
+      - 5432:5432
+    labels:
+      namespace: monitoring
+
+  # Metrics
+  db_exporter:
+    profiles:
+      - application
+    container_name: db_exporter
+    image: wrouesnel/postgres_exporter:latest
+    environment:
+      - DATA_SOURCE_URI=db:5432/postgres?sslmode=disable
+      - DATA_SOURCE_USER=postgres
+      - DATA_SOURCE_PASS=docker
+    depends_on:
+      - db
+    labels:
+      namespace: monitoring
+
+  ######################################################################################
+  ######################################################################################
+  ################################### Unit tests #######################################
+  ######################################################################################
+  ######################################################################################
+  k6-backend:
+    profiles:
+      - application
+    container_name: k6-backend
+    image: grafana/k6:0.42.0
+    volumes:
+      - ./generate_data_application/load_tests/script.js:/scripts/script.js
+    command: run /scripts/script.js
+    environment:
+      - K6_PROMETHEUS_RW_SERVER_URL=http://nginx:3702/api/v1/push
+      - K6_PROMETHEUS_RW_HEADERS_X-Scope-OrgID=backend
+      - K6_PROMETHEUS_RW_TREND_AS_NATIVE_HISTOGRAM=true
+      - K6_OUT=experimental-prometheus-rw
+    deploy:
+      restart_policy:
+        condition: any
+        delay: 15s
+        window: 120s
+    depends_on:
+      - backend
+    labels:
+      namespace: monitoring
