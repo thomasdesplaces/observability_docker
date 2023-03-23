@@ -2,15 +2,15 @@
 import http from 'k6/http';
 import { sleep, check, group } from 'k6';
 
-// init context: define k6 options
-// export const options = {
-//     vus: 2,
-//     duration: '10s',
-// };
 export const options = {
+    tags: {
+        testid: "backend"
+    },
     stages: [
-        { duration: '10s', target: 3}//,
-        //{ duration: '20s', target: 0}
+        {
+            //duration: '10s', target: 3
+            duration: '20m', target: 2
+        }
     ]
 }
 

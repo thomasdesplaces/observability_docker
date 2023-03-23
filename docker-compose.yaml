@@ -1,4 +1,4 @@
-version: "3.0"
+version: "3.9"
 
 networks:
   default:
@@ -367,7 +367,6 @@ services:
     container_name: db_exporter
     image: wrouesnel/postgres_exporter:latest
     environment:
-      # DATA_SOURCE_NAME: "postgresql://postgres:docker@db:5432/postgres?sslmode=disable"
       - DATA_SOURCE_URI=db:5432/postgres?sslmode=disable
       - DATA_SOURCE_USER=postgres
       - DATA_SOURCE_PASS=docker
@@ -381,18 +380,24 @@ services:
   ################################### Unit tests #######################################
   ######################################################################################
   ######################################################################################
-  k6:
+  k6-backend:
     profiles:
       - application
-    container_name: k6
-    image: k6
-    build:
-      context: generate_data_application/load_tests
-      dockerfile: Dockerfile
+    container_name: k6-backend
+    image: grafana/k6:0.42.0
+    volumes:
+      - ./generate_data_application/load_tests/script.js:/scripts/script.js
+    command: run /scripts/script.js
     environment:
       - K6_PROMETHEUS_RW_SERVER_URL=http://nginx:3702/api/v1/push
       - K6_PROMETHEUS_RW_HEADERS_X-Scope-OrgID=backend
       - K6_PROMETHEUS_RW_TREND_AS_NATIVE_HISTOGRAM=true
+      - K6_OUT=experimental-prometheus-rw
+    deploy:
+      restart_policy:
+        condition: any
+        delay: 15s
+        window: 120s
     depends_on:
       - backend
     labels:
