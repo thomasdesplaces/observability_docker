@@ -2,7 +2,7 @@
     <img src="./assets/observability.png" alt="Observability" width="500"/>
 </p>
 
-![alt version](https://img.shields.io/badge/Version-0.0.3-violet)
+![alt version](https://img.shields.io/badge/Version-0.0.5-violet)
 ![alt production](https://img.shields.io/badge/Production--Ready-No-green)
 ![alt docker](https://img.shields.io/badge/Deployment_tool-Docker--Compose-orange)
 ![alt ARM](https://img.shields.io/badge/Platform-ARM--M1-red)
@@ -17,12 +17,16 @@ This for testing purpose.
 
 # Architecture
 
-The observability stack is composed by Mimir, Loki and Tempo which are deployed in Monolithic mode with 3 instances of each.
-The application stack is composed by a FastAPI application with some routes and PostgreSQL database with 1 table.
-Logs are written in a log file, scrape by [Grafana Promtail](https://grafana.com/docs/loki/latest/clients/promtail/) and send to Grafana Agent.
-Metrics are exposed via [Prometheus Client](https://github.com/prometheus/client_python) and scraped by Grafana Agent.
-Traces are sent via [Opentelemetry SDK](https://github.com/open-telemetry/opentelemetry-python) to Grafana Agent.
-Unit tests are performed by [k6.io](https://k6.io).
+The observability stack is composed by Mimir, Loki and Tempo which are deployed in Monolithic mode with 3 instances of each.  
+It's also include a Grafana vizualisation tool.  
+The application stack is composed by a FastAPI application with some routes and PostgreSQL database with 1 table.  
+Logs are written in a log file, scrape by [Grafana Promtail](https://grafana.com/docs/loki/latest/clients/promtail/) and send to Grafana Agent.  
+Metrics are exposed via [Prometheus Client](https://github.com/prometheus/client_python) and scraped by Grafana Agent.  
+Traces are sent via [Opentelemetry SDK](https://github.com/open-telemetry/opentelemetry-python) to Grafana Agent.  
+Unit tests are performed by [k6.io](https://k6.io). 
+
+Mimir, Loki and Tempo metrics are also exposed througth Grafana Agent.  
+The metrics of all containers are exposed with cAdvisor.  
 
 ![alt schema](./assets/Observability-Grafana_Stack.png)
 
@@ -108,15 +112,17 @@ Grafana --> Nginx : 4702 --> Mimir : 3703
 | [<img src="./assets/grafana.png" alt="Grafana" width="200"/>](https://grafana.com/docs/grafana/latest/) | v9.3.1 | Used to visualize data (like Kibana). Based on https://github.com/grafana/grafana |
 | [<img src="./assets/minio.png" alt="Minio" width="200"/>](https://min.io) | Latest | Used to load balance traffic between each instance (on Cloud, use S3, Google Cloud Storage or similar). Based on https://github.com/minio/minio |
 | [<img src="./assets/nginx.png" alt="NGinx" width="200"/>](https://www.nginx.com/) | Latest | Used to load balance traffic between each instance. Based on https://github.com/nginx/nginx |
+| [<img src="./assets/cadvisor.png" alt="cAdvisor" width="200"/>](https://github.com/google/cadvisor) | Latest | Used to expose all containers metrics |
+
 
 ## Application stack
 Thanks to [@Blueswen](https://github.com/blueswen) for the FastAPI observability configuration.
 
 |                   Logo/Link                   |      Version    |               Usage                 |
 |:---------------------------------------------:|-----------------|-------------------------------------|
-| [<img src="./assets/promtail.png" alt="Promtail" width="200">](https://grafana.com/docs/loki/latest/clients/promtail/) | Latest | Used to scrape application logs from file. |
+| [<img src="./assets/promtail.png" alt="Promtail" height="100">](https://grafana.com/docs/loki/latest/clients/promtail/) | Latest | Used to scrape application logs from file. |
 | [<img src="./assets/fastapi.png" alt="FastAPI" width="200">](https://fastapi.tiangolo.com) | 0.88.0 | Used to expose API. Based on  https://github.com/Blueswen/fastapi-observability |
 | [<img src="./assets/postgresql.png" alt="PostgreSQL" width="200">](https://www.postgresql.org) | 15-Bullseye | Used to store application data. |
-| [<img src="./assets/prometheus.png" width="200">](https://github.com/prometheus-community/postgres_exporter) | Latest | Used to export Postgres metrics. Based on https://hub.docker.com/r/wrouesnel/postgres_exporter |
-| [<img src="./assets/k6.png" alt="k6.io" width="200">](https://www.k6.io) | Latest | Used to performed unit tests. |
+| [<img src="./assets/prometheus.png" height="100">](https://github.com/prometheus-community/postgres_exporter) | Latest | Used to export Postgres metrics. Based on https://hub.docker.com/r/wrouesnel/postgres_exporter |
+| [<img src="./assets/k6.png" alt="k6.io" height="100">](https://www.k6.io) | Latest | Used to performed unit tests. |
 | [<img src="./assets/otel.png" alt="OpenTelemetry" width="200">](https://github.com/open-telemetry/opentelemetry-python) | 1.15.0 | Used to generate traces. |

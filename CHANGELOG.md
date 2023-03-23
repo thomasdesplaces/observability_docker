@@ -1,3 +1,17 @@
+0.0.5 - 2023-03-23
+===================
+
+### Features
+- Add cAdivsor container to catch containers metrics + [dashboard](./grafana/dashboards/cadvisor.json) (@thomasdesplaces)
+- Add [Mimir continuous tests](./docker-compose.metrics.yaml) + [dashboard](./grafana/dashboards/mimir-overview.json) (@thomasdesplaces)
+- Add [k6 backend tests results in Mimir](./docker-compose.backend.yaml) + [dashboard](./grafana/dashboards/k6-backend.json) (@thomasdesplaces)
+
+### Updating
+- Split Docker-Compose file in multiple files for better readability (@thomasdesplaces)
+- Update Docker-Compose version in all files + change [k6 test duration](./generate_data_application/load_tests/script.js) (@thomasdesplaces)
+- Update [README](./README.md) with some informations (@thomasdesplaces)
+- Update [architecture schema](./assets/Observability-Grafana_Stack.png) with informations about exposed metrics and cAdvisor (@thomasdesplaces)
+
 0.0.4 - 2023-03-16
 ===================
 
@@ -18,7 +32,7 @@
 
 ### Updating
 - Update [GitIgnore](./.gitignore) (@thomasdesplaces)
-- Update README with some informations about ports and postgres exporter (@thomasdesplaces)
+- Update [README](./README.md) with some informations about ports and postgres exporter (@thomasdesplaces)
 - Reduce testing time from 30s to 10s in [k6](./generate_data_application/load_tests/script.js) (@thomasdesplaces)
 - Change the log level from DEBUG to INFO in [settings](./generate_data_application/backend/app/settings.py) (@thomasdesplaces)
 
